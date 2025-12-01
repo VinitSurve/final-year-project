@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Participant OD Form - Event Leader - BVDU</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0E27;
+      color: #E2E8F0;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(66, 133, 244, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(52, 168, 83, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(26, 31, 58, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .navbar-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4, #34A853);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(66, 133, 244, 0.1);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      border-radius: 12px;
+      color: #4285F4;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(66, 133, 244, 0.2);
+      transform: translateX(-4px);
+    }
+
+    .form-info-card {
+      background: rgba(26, 31, 58, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .student-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .student-info h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 0.5rem;
+    }
+
+    .student-meta {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(66, 133, 244, 0.1);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #4285F4;
+    }
+
+    .badge-participant {
+      background: rgba(66, 133, 244, 0.1);
+      border-color: rgba(66, 133, 244, 0.3);
+      color: #4285F4;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .info-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .subjects-section {
+      background: rgba(26, 31, 58, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subjects-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .subjects-table thead {
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    .subjects-table th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #4285F4;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .subjects-table td {
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .subjects-table tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    .subjects-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .subjects-table tbody tr.subject-locked {
+      background: rgba(234, 67, 53, 0.05);
+      opacity: 0.7;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-option {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(26, 31, 58, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .radio-label:hover {
+      background: rgba(26, 31, 58, 0.95);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.approve {
+      background: rgba(52, 168, 83, 0.2);
+      border-color: #34A853;
+      color: #34A853;
+      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.1);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.reject {
+      background: rgba(234, 67, 53, 0.2);
+      border-color: #EA4335;
+      color: #EA4335;
+      box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.1);
+    }
+
+    .remarks-input {
+      width: 100%;
+      padding: 0.5rem;
+      background: rgba(26, 31, 58, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #E2E8F0;
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 60px;
+      font-family: inherit;
+    }
+
+    .remarks-input:focus {
+      outline: none;
+      border-color: #4285F4;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-approved {
+      background: rgba(52, 168, 83, 0.15);
+      color: #34A853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+
+    .status-rejected {
+      background: rgba(234, 67, 53, 0.15);
+      color: #EA4335;
+      border: 1px solid rgba(234, 67, 53, 0.3);
+    }
+
+    .status-pending {
+      background: rgba(251, 188, 4, 0.15);
+      color: #FBBC04;
+      border: 1px solid rgba(251, 188, 4, 0.3);
+    }
+
+    .locked-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(234, 67, 53, 0.15);
+      border: 1px solid rgba(234, 67, 53, 0.3);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #EA4335;
+    }
+
+    .decision-summary {
+      background: rgba(66, 133, 244, 0.05);
+      border: 1px solid rgba(66, 133, 244, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .summary-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 1rem;
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .summary-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .summary-stat-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .summary-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .summary-stat-value.success {
+      color: #34A853;
+    }
+
+    .summary-stat-value.danger {
+      color: #EA4335;
+    }
+
+    .summary-stat-value.info {
+      color: #4285F4;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-bulk-approve {
+      background: linear-gradient(135deg, #34A853, #2E7D32);
+      color: #FFFFFF;
+      box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3);
+    }
+
+    .btn-bulk-approve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+    }
+
+    .btn-bulk-reject {
+      background: linear-gradient(135deg, #EA4335, #C5221F);
+      color: #FFFFFF;
+      box-shadow: 0 4px 15px rgba(234, 67, 53, 0.3);
+    }
+
+    .btn-bulk-reject:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #4285F4, #1976D2);
+      color: #FFFFFF;
+      box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div style="display: flex; align-items: center; justify-content: space-between; max-width: 1400px; margin: 0 auto;">
+      <a href="../../index.html" class="navbar-brand">🎓 BVDU OD Forms</a>
+      <a href="dashboard.html" style="color: #4285F4; text-decoration: none; font-weight: 500;">← Back to Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">📋 Review Participant OD Form</h1>
+        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">Subject-level approval for participant OD form submission</p>
+      </div>
+      <a href="dashboard.html" class="btn-back">
+        ← Back
+      </a>
+    </div>
+
+    <!-- Student & Form Info -->
+    <div class="form-info-card">
+      <div class="student-header">
+        <div class="student-info">
+          <h2 id="studentName">Loading...</h2>
+          <div class="student-meta">
+            <span id="rollNumber"></span>
+            <span>•</span>
+            <span id="courseInfo"></span>
+            <span>•</span>
+            <span id="submissionDate"></span>
+          </div>
+        </div>
+        <span class="badge badge-participant">🎓 Participant</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Event Name</span>
+          <span class="info-value" id="eventName">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Date</span>
+          <span class="info-value" id="eventDate">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Type</span>
+          <span class="info-value" id="eventType">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Total Subjects</span>
+          <span class="info-value" id="totalSubjects">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subjects Review Section -->
+    <div class="subjects-section">
+      <h3 class="section-title">📚 Subjects for Review</h3>
+      
+      <div style="overflow-x: auto;">
+        <table class="subjects-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Subject</th>
+              <th>Faculty</th>
+              <th style="text-align: center;">Your Decision</th>
+            </tr>
+          </thead>
+          <tbody id="subjectsTableBody">
+            <tr>
+              <td colspan="6" class="empty-state">
+                <div class="empty-icon">⏳</div>
+                <div>Loading subjects...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Decision Summary -->
+      <div class="decision-summary">
+        <h4 class="summary-title">Decision Summary</h4>
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <span class="summary-stat-label">Total Subjects</span>
+            <span class="summary-stat-value" id="summaryTotal">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Approved</span>
+            <span class="summary-stat-value success" id="summaryApproved">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Rejected</span>
+            <span class="summary-stat-value danger" id="summaryRejected">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Pending</span>
+            <span class="summary-stat-value info" id="summaryPending">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-bulk-approve" onclick="bulkApprove()">
+          ✅ Approve All Pending
+        </button>
+        <button class="btn btn-bulk-reject" onclick="bulkReject()">
+          ❌ Reject All Pending
+        </button>
+        <button class="btn btn-submit" onclick="submitReview()">
+          📤 Submit Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get form ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const formId = urlParams.get('id');
+
+    let currentForm = null;
+    let subjects = [];
+
+    // Mock OD Form Data
+    const mockODForm = {
+      form_id: 'OD-2025-001',
+      student_id: 'STU2025001',
+      student_name: 'Rahul Kumar',
+      roll_number: '25BCA001',
+      course: 'BCA',
+      semester: 'III',
+      division: 'A',
+      submission_date: '2025-12-13T10:00:00',
+      event_id: 'EVT-2025-001',
+      event_name: 'AI & Machine Learning Summit 2025',
+      event_date: '2025-12-15',
+      event_type: 'Conference',
+      role: 'participant',
+      subjects: [
+        {
+          subject_id: 'SUB001',
+          subject_name: 'Data Structures',
+          subject_code: 'BCA301',
+          date: '2025-12-15',
+          day: 'Friday',
+          start_time: '09:00',
+          end_time: '10:00',
+          faculty_name: 'Dr. Rajesh Kumar',
+          lecture_type: 'auto',
+          event_leader_status: '',
+          event_leader_remarks: '',
+        },
+        {
+          subject_id: 'SUB004',
+          subject_name: 'Web Technologies',
+          subject_code: 'BCA304',
+          date: '2025-12-15',
+          day: 'Friday',
+          start_time: '10:00',
+          end_time: '11:00',
+          faculty_name: 'Prof. Priya Desai',
+          lecture_type: 'auto',
+          event_leader_status: '',
+          event_leader_remarks: '',
+        },
+        {
+          subject_id: 'SUB004-2',
+          subject_name: 'Web Technologies',
+          subject_code: 'BCA304',
+          date: '2025-12-15',
+          day: 'Friday',
+          start_time: '11:00',
+          end_time: '12:00',
+          faculty_name: 'Prof. Priya Desai',
+          lecture_type: 'auto',
+          event_leader_status: '',
+          event_leader_remarks: '',
+        },
+        {
+          subject_id: 'SUB005',
+          subject_name: 'Computer Networks',
+          subject_code: 'BCA305',
+          date: '2025-12-15',
+          day: 'Friday',
+          start_time: '17:00',
+          end_time: '18:00',
+          faculty_name: 'Dr. Vikram Patel',
+          lecture_type: 'auto',
+          event_leader_status: '',
+          event_leader_remarks: '',
+        }
+      ]
+    };
+
+    // Initialize
+    function init() {
+      if (!formId) {
+        alert('No form ID provided');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      loadFormData();
+    }
+
+    // Load Form Data
+    function loadFormData() {
+      // In production, load from localStorage or API
+      currentForm = mockODForm;
+      subjects = [...mockODForm.subjects];
+
+      // Populate form info
+      document.getElementById('studentName').textContent = currentForm.student_name;
+      document.getElementById('rollNumber').textContent = currentForm.roll_number;
+      document.getElementById('courseInfo').textContent = `${currentForm.course} - Sem ${currentForm.semester} - Div ${currentForm.division}`;
+      document.getElementById('submissionDate').textContent = formatDate(currentForm.submission_date);
+      document.getElementById('eventName').textContent = currentForm.event_name;
+      document.getElementById('eventDate').textContent = formatDate(currentForm.event_date);
+      document.getElementById('eventType').textContent = currentForm.event_type;
+      document.getElementById('totalSubjects').textContent = subjects.length;
+
+      renderSubjects();
+      updateSummary();
+    }
+
+    // Render Subjects
+    function renderSubjects() {
+      const tbody = document.getElementById('subjectsTableBody');
+      
+      if (subjects.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty-state">
+              <div class="empty-icon">📚</div>
+              <div>No subjects found</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = subjects.map((subject, index) => `
+        <tr>
+          <td>${formatDateShort(subject.date)}</td>
+          <td>${subject.start_time} - ${subject.end_time}</td>
+          <td>
+            <div style="font-weight: 600;">${subject.subject_name}</div>
+            <div style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.5);">${subject.subject_code}</div>
+          </td>
+          <td>${subject.faculty_name}</td>
+          <td>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input 
+                  type="radio" 
+                  id="approve-${index}" 
+                  name="decision-${index}" 
+                  value="approved"
+                  ${subject.event_leader_status === 'approved' ? 'checked' : ''}
+                  onchange="updateSubjectStatus(${index}, 'approved')"
+                />
+                <label for="approve-${index}" class="radio-label approve">
+                  ✅ Approve
+                </label>
+              </div>
+              <div class="radio-option">
+                <input 
+                  type="radio" 
+                  id="reject-${index}" 
+                  name="decision-${index}" 
+                  value="rejected"
+                  ${subject.event_leader_status === 'rejected' ? 'checked' : ''}
+                  onchange="updateSubjectStatus(${index}, 'rejected')"
+                />
+                <label for="reject-${index}" class="radio-label reject">
+                  ❌ Reject
+                </label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        ${subject.event_leader_status === 'rejected' ? `
+        <tr class="remarks-row">
+          <td colspan="5" style="padding: 0 1rem 1rem 1rem; background: rgba(234, 67, 53, 0.05);">
+            <div style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #EA4335; font-weight: 600; font-size: 0.875rem; white-space: nowrap;">Rejection Reason:</span>
+              <input 
+                type="text" 
+                class="remarks-input" 
+                id="remarks-${index}"
+                value="${subject.event_leader_remarks || ''}"
+                placeholder="Required: Explain why this subject is rejected..."
+                onchange="updateSubjectRemarks(${index}, this.value)"
+                style="flex: 1; min-height: 40px; border-color: rgba(234, 67, 53, 0.3);"
+              />
+            </div>
+          </td>
+        </tr>
+        ` : ''}
+      `).join('');
+    }
+
+    // Update Subject Status
+    function updateSubjectStatus(index, status) {
+      subjects[index].event_leader_status = status;
+      if (status !== 'rejected') {
+        subjects[index].event_leader_remarks = '';
+      }
+      renderSubjects();
+      updateSummary();
+    }
+
+    // Update Subject Remarks
+    function updateSubjectRemarks(index, remarks) {
+      subjects[index].event_leader_remarks = remarks;
+    }
+
+    // Update Summary
+    function updateSummary() {
+      const total = subjects.length;
+      const approved = subjects.filter(s => s.event_leader_status === 'approved').length;
+      const rejected = subjects.filter(s => s.event_leader_status === 'rejected').length;
+      const pending = subjects.filter(s => !s.event_leader_status || s.event_leader_status === '').length;
+
+      document.getElementById('summaryTotal').textContent = total;
+      document.getElementById('summaryApproved').textContent = approved;
+      document.getElementById('summaryRejected').textContent = rejected;
+      document.getElementById('summaryPending').textContent = pending;
+    }
+
+    // Bulk Approve
+    function bulkApprove() {
+      if (!confirm('Are you sure you want to approve all pending subjects?')) return;
+
+      subjects.forEach((subject, index) => {
+        if (!subject.event_leader_status || subject.event_leader_status === '') {
+          subject.event_leader_status = 'approved';
+          const radio = document.getElementById(`approve-${index}`);
+          if (radio) radio.checked = true;
+        }
+      });
+
+      updateSummary();
+      alert('All pending subjects have been approved!');
+    }
+
+    // Bulk Reject
+    function bulkReject() {
+      const reason = prompt('Please provide a reason for bulk rejection:');
+      if (!reason) return;
+
+      subjects.forEach((subject, index) => {
+        if (!subject.event_leader_status || subject.event_leader_status === '') {
+          subject.event_leader_status = 'rejected';
+          subject.event_leader_remarks = reason;
+          const radio = document.getElementById(`reject-${index}`);
+          if (radio) radio.checked = true;
+          const remarks = document.getElementById(`remarks-${index}`);
+          if (remarks) remarks.value = reason;
+        }
+      });
+
+      updateSummary();
+      alert('All pending subjects have been rejected!');
+    }
+
+    // Submit Review
+    function submitReview() {
+      // Check if all subjects have been reviewed (must have approved or rejected)
+      const pending = subjects.filter(s => !s.event_leader_status || s.event_leader_status === '').length;
+      
+      if (pending > 0) {
+        alert(`Please make a decision for all subjects. You have ${pending} subject(s) without a decision (approved or rejected).`);
+        return;
+      }
+
+      // Check if rejected subjects have remarks
+      const rejectedWithoutRemarks = subjects.filter(s => 
+        s.event_leader_status === 'rejected' && !s.event_leader_remarks.trim()
+      ).length;
+
+      if (rejectedWithoutRemarks > 0) {
+        alert('Please provide remarks for all rejected subjects.');
+        return;
+      }
+
+      // Update form data
+      currentForm.subjects = subjects;
+      currentForm.event_leader_reviewed_at = new Date().toISOString();
+      currentForm.event_leader_reviewed_by = 'EL2025001'; // Current event leader ID
+      
+      // Calculate overall status
+      const approved = subjects.filter(s => s.event_leader_status === 'approved').length;
+      const rejected = subjects.filter(s => s.event_leader_status === 'rejected').length;
+      
+      if (approved === subjects.length) {
+        currentForm.overall_status = 'all_approved_by_el';
+      } else if (rejected === subjects.length) {
+        currentForm.overall_status = 'all_rejected_by_el';
+      } else {
+        currentForm.overall_status = 'partially_approved_by_el';
+      }
+
+      // Save to localStorage (in production, send to API/Supabase)
+      const allForms = JSON.parse(localStorage.getItem('bvdu_od_forms') || '[]');
+      const formIndex = allForms.findIndex(f => f.form_id === currentForm.form_id);
+      
+      if (formIndex >= 0) {
+        allForms[formIndex] = currentForm;
+      } else {
+        allForms.push(currentForm);
+      }
+      
+      localStorage.setItem('bvdu_od_forms', JSON.stringify(allForms));
+
+      alert('Review submitted successfully! The form will now be sent to Faculty for further review.');
+      window.location.href = 'dashboard.html';
+    }
+
+    // Format Date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', { 
+        day: '2-digit', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function formatDateShort(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', { 
+        day: '2-digit', 
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

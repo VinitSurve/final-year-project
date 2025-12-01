@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Volunteer OD Form - Event Leader Dashboard</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0E27;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(66, 133, 244, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(52, 168, 83, 0.08), transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      color: #94A3B8;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    /* Page Header */
+    .page-header {
+      padding: 2rem 0 1.5rem;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: #94A3B8;
+      font-size: 1rem;
+    }
+
+    /* Card Styles */
+    .card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-icon {
+      font-size: 1.5rem;
+    }
+
+    .card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #E2E8F0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info-label {
+      color: #64748B;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .info-value {
+      color: #E2E8F0;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(251, 188, 4, 0.15);
+      border: 1px solid rgba(251, 188, 4, 0.3);
+      border-radius: 2rem;
+      color: #FBBC04;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    /* Table Styles */
+    .subjects-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+    }
+
+    .subjects-table thead {
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    .subjects-table th {
+      padding: 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #4285F4;
+      border-bottom: 2px solid rgba(66, 133, 244, 0.3);
+    }
+
+    .subjects-table th:first-child {
+      border-top-left-radius: 0.5rem;
+    }
+
+    .subjects-table th:last-child {
+      border-top-right-radius: 0.5rem;
+    }
+
+    .subjects-table td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #E2E8F0;
+      font-size: 0.875rem;
+    }
+
+    .subjects-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .subjects-table tbody tr:hover {
+      background: rgba(66, 133, 244, 0.05);
+    }
+
+    .prep-day-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(251, 188, 4, 0.15);
+      border: 1px solid rgba(251, 188, 4, 0.3);
+      border-radius: 1rem;
+      color: #FBBC04;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .event-day-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(66, 133, 244, 0.15);
+      border: 1px solid rgba(66, 133, 244, 0.3);
+      border-radius: 1rem;
+      color: #4285F4;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-option {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .radio-label:hover {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.approve {
+      background: rgba(52, 168, 83, 0.2);
+      border-color: #34A853;
+      color: #34A853;
+      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.1);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.reject {
+      background: rgba(234, 67, 53, 0.2);
+      border-color: #EA4335;
+      color: #EA4335;
+      box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.1);
+    }
+
+    .remarks-input {
+      width: 100%;
+      padding: 0.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.375rem;
+      color: #E2E8F0;
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 60px;
+      transition: all 0.3s ease;
+    }
+
+    .remarks-input:focus {
+      outline: none;
+      border-color: #4285F4;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    }
+
+    /* Decision Summary */
+    .decision-summary {
+      background: rgba(66, 133, 244, 0.1);
+      border-left: 3px solid #4285F4;
+      border-radius: 0.375rem;
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .summary-title {
+      font-weight: 700;
+      color: #4285F4;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .summary-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .summary-stat-label {
+      color: #94A3B8;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .summary-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4285F4 0%, #1976D2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(66, 133, 244, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-approve {
+      background: linear-gradient(135deg, #34A853 0%, #2E7D32 100%);
+      color: white;
+    }
+
+    .btn-approve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(52, 168, 83, 0.4);
+    }
+
+    .btn-reject {
+      background: linear-gradient(135deg, #EA4335 0%, #C5221F 100%);
+      color: white;
+    }
+
+    .btn-reject:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(234, 67, 53, 0.4);
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bulk-actions {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    /* Alert Box */
+    .alert {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      display: flex;
+      align-items: start;
+      gap: 0.75rem;
+    }
+
+    .alert-warning {
+      background: rgba(251, 188, 4, 0.15);
+      border: 1px solid rgba(251, 188, 4, 0.3);
+      color: #FBBC04;
+    }
+
+    .alert-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .subjects-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .bulk-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <a href="../../index.html" class="navbar-brand flex items-center gap-3">
+          <span class="text-3xl">🎓</span>
+          <span>BVDU OD Forms</span>
+        </a>
+        <ul class="flex items-center gap-2">
+          <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
+            <span>📋</span> OD Forms
+          </a></li>
+          <li><a href="create-event.html" class="nav-link flex items-center gap-2">
+            <span>➕</span> Create Event
+          </a></li>
+          <li><a href="my-events.html" class="nav-link flex items-center gap-2">
+            <span>🎯</span> My Events
+          </a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2" id="logoutBtn">
+            <span>🚪</span> Logout
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-6 py-8 max-w-7xl">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">🤝 Review Volunteer OD Form</h1>
+      <p class="page-subtitle">Review and approve subjects for volunteer role (includes prep days)</p>
+    </div>
+
+    <!-- Student & Form Information -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">👤</span>
+        <h2 class="card-title">Student Information</h2>
+        <div style="margin-left: auto;">
+          <span class="role-badge">
+            <span>🤝</span> Volunteer
+          </span>
+        </div>
+      </div>
+      <div class="info-grid" id="studentInfo">
+        <!-- Will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Event Information -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">🎯</span>
+        <h2 class="card-title">Event Information</h2>
+      </div>
+      <div class="info-grid" id="eventInfo">
+        <!-- Will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Alert for Volunteer ODs -->
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <strong>Volunteer OD Forms Include Prep Days</strong>
+        <p style="margin-top: 0.25rem; font-size: 0.875rem; opacity: 0.9;">
+          This volunteer was involved in event preparation. The subjects below include both prep day lectures and event day lectures. Review each subject individually.
+        </p>
+      </div>
+    </div>
+
+    <!-- Subjects Review -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-icon">📚</span>
+        <h2 class="card-title">Missed Subjects - Your Decision Required</h2>
+      </div>
+
+      <!-- Subjects Table -->
+      <div style="overflow-x: auto;">
+        <table class="subjects-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Subject</th>
+              <th>Faculty</th>
+              <th>Your Decision</th>
+            </tr>
+          </thead>
+          <tbody id="subjectsTableBody">
+            <!-- Will be populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Decision Summary -->
+      <div class="decision-summary">
+        <div class="summary-title">📊 Decision Summary</div>
+        <div class="summary-stats">
+          <div class="summary-stat">
+            <span class="summary-stat-label">Total Subjects</span>
+            <span class="summary-stat-value" id="totalSubjects">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Approved</span>
+            <span class="summary-stat-value" style="color: #34A853;" id="approvedSubjects">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Rejected</span>
+            <span class="summary-stat-value" style="color: #EA4335;" id="rejectedSubjects">0</span>
+          </div>
+          <div class="summary-stat">
+            <span class="summary-stat-label">Pending</span>
+            <span class="summary-stat-value" style="color: #FBBC04;" id="pendingSubjects">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-approve" onclick="bulkApprove()">
+          ✅ Approve All Pending
+        </button>
+        <button class="btn btn-reject" onclick="bulkReject()">
+          ❌ Reject All Pending
+        </button>
+        <button class="btn btn-primary" onclick="submitReview()">
+          💾 Submit Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mock OD Form Data - Volunteer with prep days
+    let formData = {
+      form_id: 'OD-2025-005',
+      student_name: 'Sneha Deshmukh',
+      roll_number: 'CS2021089',
+      course: 'B.Tech Computer Science',
+      semester: 'VI',
+      division: 'B',
+      contact: '+91 98765 54321',
+      role: 'volunteer',
+      event_name: 'IEEE Technical Symposium',
+      event_type: 'Conference',
+      event_date: '2025-03-28',
+      submission_date: '2025-03-15T10:30:00',
+      prep_days: ['2025-03-26', '2025-03-27'],
+      subjects: [
+        {
+          subject_id: 'SUB-001',
+          name: 'Operating Systems',
+          date: '2025-03-26',
+          time: '10:00 AM - 11:30 AM',
+          faculty: 'Dr. Ramesh Kumar',
+          type: 'prep_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        },
+        {
+          subject_id: 'SUB-002',
+          name: 'Computer Networks',
+          date: '2025-03-26',
+          time: '02:00 PM - 03:30 PM',
+          faculty: 'Prof. Sunita Sharma',
+          type: 'prep_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        },
+        {
+          subject_id: 'SUB-003',
+          name: 'Software Engineering',
+          date: '2025-03-27',
+          time: '09:00 AM - 10:30 AM',
+          faculty: 'Dr. Vikram Singh',
+          type: 'prep_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        },
+        {
+          subject_id: 'SUB-004',
+          name: 'Database Management',
+          date: '2025-03-27',
+          time: '11:00 AM - 12:30 PM',
+          faculty: 'Prof. Anjali Mehta',
+          type: 'prep_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        },
+        {
+          subject_id: 'SUB-005',
+          name: 'Web Technologies',
+          date: '2025-03-28',
+          time: '10:00 AM - 11:30 AM',
+          faculty: 'Dr. Priya Joshi',
+          type: 'event_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        },
+        {
+          subject_id: 'SUB-006',
+          name: 'Cloud Computing',
+          date: '2025-03-28',
+          time: '02:00 PM - 03:30 PM',
+          faculty: 'Prof. Rajesh Patil',
+          type: 'event_day',
+          event_leader_status: '',
+          event_leader_remarks: ''
+        }
+      ]
+    };
+
+    // Load form data on page load
+    function loadFormData() {
+      // Populate student information
+      document.getElementById('studentInfo').innerHTML = `
+        <div class="info-item">
+          <span class="info-label">Form ID</span>
+          <span class="info-value">${formData.form_id}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Student Name</span>
+          <span class="info-value">${formData.student_name}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Roll Number</span>
+          <span class="info-value">${formData.roll_number}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Course</span>
+          <span class="info-value">${formData.course}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Semester</span>
+          <span class="info-value">Semester ${formData.semester}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Division</span>
+          <span class="info-value">Division ${formData.division}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Contact</span>
+          <span class="info-value">${formData.contact}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Submission Date</span>
+          <span class="info-value">${formatDate(formData.submission_date)}</span>
+        </div>
+      `;
+
+      // Populate event information
+      const prepDaysCount = formData.prep_days ? formData.prep_days.length : 0;
+      const prepDaysText = formData.prep_days ? formData.prep_days.map(d => formatDate(d)).join(', ') : 'N/A';
+      
+      document.getElementById('eventInfo').innerHTML = `
+        <div class="info-item">
+          <span class="info-label">Event Name</span>
+          <span class="info-value">${formData.event_name}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Type</span>
+          <span class="info-value">${formData.event_type}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Date</span>
+          <span class="info-value">${formatDate(formData.event_date)}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Role</span>
+          <span class="info-value">Volunteer (${prepDaysCount} prep days)</span>
+        </div>
+        <div class="info-item" style="grid-column: 1 / -1;">
+          <span class="info-label">Prep Days</span>
+          <span class="info-value">${prepDaysText}</span>
+        </div>
+      `;
+
+      // Render subjects table
+      renderSubjects();
+    }
+
+    // Render subjects table
+    function renderSubjects() {
+      const tbody = document.getElementById('subjectsTableBody');
+      tbody.innerHTML = formData.subjects.map((subject, index) => `
+        <tr>
+          <td>
+            ${subject.type === 'prep_day' ? 
+              '<span class="prep-day-badge">📅 Prep Day</span>' : 
+              '<span class="event-day-badge">🎯 Event Day</span>'
+            }
+          </td>
+          <td>${formatDate(subject.date)}</td>
+          <td>${subject.time}</td>
+          <td><strong>${subject.name}</strong></td>
+          <td>${subject.faculty}</td>
+          <td>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input 
+                  type="radio" 
+                  id="approve-${index}" 
+                  name="decision-${index}" 
+                  value="approved"
+                  ${subject.event_leader_status === 'approved' ? 'checked' : ''}
+                  onchange="updateSubjectStatus(${index}, 'approved')"
+                />
+                <label for="approve-${index}" class="radio-label approve">
+                  ✅ Approve
+                </label>
+              </div>
+              <div class="radio-option">
+                <input 
+                  type="radio" 
+                  id="reject-${index}" 
+                  name="decision-${index}" 
+                  value="rejected"
+                  ${subject.event_leader_status === 'rejected' ? 'checked' : ''}
+                  onchange="updateSubjectStatus(${index}, 'rejected')"
+                />
+                <label for="reject-${index}" class="radio-label reject">
+                  ❌ Reject
+                </label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        ${subject.event_leader_status === 'rejected' ? `
+        <tr class="remarks-row">
+          <td colspan="6" style="padding: 0 1rem 1rem 1rem; background: rgba(234, 67, 53, 0.05);">
+            <div style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #EA4335; font-weight: 600; font-size: 0.875rem; white-space: nowrap;">Rejection Reason:</span>
+              <textarea 
+                class="remarks-input" 
+                id="remarks-${index}" 
+                placeholder="Required: Explain why this subject is rejected..."
+                onchange="updateSubjectRemarks(${index}, this.value)"
+                style="flex: 1; min-height: 60px; border-color: rgba(234, 67, 53, 0.3);"
+              >${subject.event_leader_remarks || ''}</textarea>
+            </div>
+          </td>
+        </tr>
+        ` : ''}
+      `).join('');
+
+      updateDecisionSummary();
+    }
+
+    // Update subject status
+    function updateSubjectStatus(index, status) {
+      formData.subjects[index].event_leader_status = status;
+      if (status !== 'rejected') {
+        formData.subjects[index].event_leader_remarks = '';
+      }
+      renderSubjects();
+      updateDecisionSummary();
+    }
+
+    // Update subject remarks
+    function updateSubjectRemarks(index, remarks) {
+      formData.subjects[index].event_leader_remarks = remarks;
+    }
+
+    // Update decision summary
+    function updateDecisionSummary() {
+      const total = formData.subjects.length;
+      const approved = formData.subjects.filter(s => s.event_leader_status === 'approved').length;
+      const rejected = formData.subjects.filter(s => s.event_leader_status === 'rejected').length;
+      const pending = formData.subjects.filter(s => !s.event_leader_status || s.event_leader_status === '').length;
+
+      document.getElementById('totalSubjects').textContent = total;
+      document.getElementById('approvedSubjects').textContent = approved;
+      document.getElementById('rejectedSubjects').textContent = rejected;
+      document.getElementById('pendingSubjects').textContent = pending;
+    }
+
+    // Bulk approve all pending subjects
+    function bulkApprove() {
+      if (!confirm('Are you sure you want to approve all pending subjects?')) {
+        return;
+      }
+
+      formData.subjects.forEach((subject, index) => {
+        if (!subject.event_leader_status || subject.event_leader_status === '') {
+          subject.event_leader_status = 'approved';
+          const radio = document.getElementById(`approve-${index}`);
+          if (radio) radio.checked = true;
+        }
+      });
+
+      updateDecisionSummary();
+      alert('✅ All pending subjects have been approved!');
+    }
+
+    // Bulk reject all pending subjects
+    function bulkReject() {
+      const reason = prompt('Please provide a reason for rejecting all pending subjects:');
+      if (!reason || reason.trim() === '') {
+        alert('⚠️ Rejection reason is required for bulk rejection.');
+        return;
+      }
+
+      formData.subjects.forEach((subject, index) => {
+        if (!subject.event_leader_status || subject.event_leader_status === '') {
+          subject.event_leader_status = 'rejected';
+          subject.event_leader_remarks = reason;
+          const radio = document.getElementById(`reject-${index}`);
+          if (radio) radio.checked = true;
+          document.getElementById(`remarks-${index}`).value = reason;
+        }
+      });
+
+      updateDecisionSummary();
+      alert('❌ All pending subjects have been rejected.');
+    }
+
+    // Submit review
+    function submitReview() {
+      // Check if all subjects have been reviewed (must have approved or rejected)
+      const pendingSubjects = formData.subjects.filter(s => !s.event_leader_status || s.event_leader_status === '');
+      if (pendingSubjects.length > 0) {
+        alert(`Please make a decision for all subjects. You have ${pendingSubjects.length} subject(s) without a decision (approved or rejected).`);
+        return;
+      }
+
+      // Validate that all rejected subjects have remarks
+      const rejectedWithoutRemarks = formData.subjects.filter(
+        s => s.event_leader_status === 'rejected' && (!s.event_leader_remarks || s.event_leader_remarks.trim() === '')
+      );
+
+      if (rejectedWithoutRemarks.length > 0) {
+        alert('❌ Error: All rejected subjects must have remarks explaining the reason for rejection.\n\nPlease add remarks for all rejected subjects before submitting.');
+        return;
+      }
+
+      // Calculate overall form status
+      const allApproved = formData.subjects.every(s => s.event_leader_status === 'approved');
+      const anyRejected = formData.subjects.some(s => s.event_leader_status === 'rejected');
+      
+      let formStatus;
+      if (allApproved) {
+        formStatus = 'approved_by_event_leader';
+      } else if (anyRejected) {
+        formStatus = 'partially_rejected_by_event_leader';
+      } else {
+        formStatus = 'pending_event_leader';
+      }
+
+      // Add review metadata
+      formData.event_leader_review_date = new Date().toISOString();
+      formData.status = formStatus;
+
+      // Save to localStorage (simulating database save)
+      const existingForms = JSON.parse(localStorage.getItem('bvdu_od_forms') || '[]');
+      const formIndex = existingForms.findIndex(f => f.form_id === formData.form_id);
+      
+      if (formIndex >= 0) {
+        existingForms[formIndex] = formData;
+      } else {
+        existingForms.push(formData);
+      }
+      
+      localStorage.setItem('bvdu_od_forms', JSON.stringify(existingForms));
+
+      // Show success message
+      const approvedCount = formData.subjects.filter(s => s.event_leader_status === 'approved').length;
+      const rejectedCount = formData.subjects.filter(s => s.event_leader_status === 'rejected').length;
+      
+      alert(`✅ Review Submitted Successfully!\n\n📊 Summary:\n• Approved: ${approvedCount} subjects\n• Rejected: ${rejectedCount} subjects\n\n${allApproved ? '✅ All subjects approved - Form will proceed to Faculty review.' : anyRejected ? '⚠️ Some subjects rejected - Student will be notified.' : '⏳ Some subjects still pending.'}`);
+      
+      // Redirect to dashboard
+      window.location.href = 'dashboard.html';
+    }
+
+    // Format date helper
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', { 
+        day: '2-digit', 
+        month: 'short', 
+        year: 'numeric' 
+      });
+    }
+
+    // Logout handler
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      window.location.href = '../../login.html';
+    });
+
+    // Initialize page
+    loadFormData();
+  </script>
+</body>
+</html>

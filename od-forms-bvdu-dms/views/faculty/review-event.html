@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Event - Faculty - BVDU Event Management</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../js/particles.js" defer></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0E27;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(66, 133, 244, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(52, 168, 83, 0.08), transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: #94A3B8;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    /* Page Header */
+    .page-header {
+      margin: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4, #34A853);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn-back {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Event Details Section */
+    .event-details {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .event-icon-large {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .event-title-large {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1rem;
+    }
+
+    .event-meta-large {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      color: #94A3B8;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .event-meta-item-large {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-right: 0.5rem;
+    }
+
+    .badge-category {
+      background: rgba(66, 133, 244, 0.15);
+      color: #4285F4;
+      border: 1px solid rgba(66, 133, 244, 0.3);
+    }
+
+    .section {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-content {
+      color: #94A3B8;
+      line-height: 1.8;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .info-item {
+      background: rgba(30, 41, 59, 0.5);
+      padding: 1rem;
+      border-radius: 0.75rem;
+    }
+
+    .info-label {
+      color: #64748B;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+
+    /* Event Leader Decision Section */
+    .leader-decision-section {
+      background: linear-gradient(135deg, rgba(66, 133, 244, 0.1) 0%, rgba(52, 168, 83, 0.1) 100%);
+      border: 2px solid rgba(66, 133, 244, 0.3);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .leader-decision-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .decision-icon-large {
+      font-size: 3rem;
+    }
+
+    .leader-decision-info h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 0.25rem;
+    }
+
+    .decision-status-large {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .decision-approved {
+      color: #34A853;
+    }
+
+    .decision-rejected {
+      color: #EA4335;
+    }
+
+    .leader-reason-box {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .leader-reason-box h4 {
+      color: #E2E8F0;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .leader-reason-text {
+      color: #94A3B8;
+      line-height: 1.8;
+    }
+
+    .leader-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #64748B;
+      font-size: 0.875rem;
+    }
+
+    /* Faculty Action Section */
+    .faculty-action-section {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .action-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      color: #E2E8F0;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 1rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: center;
+      font-size: 1.125rem;
+    }
+
+    .btn-approve {
+      background: #34A853;
+      color: white;
+    }
+
+    .btn-approve:hover {
+      background: #2E9549;
+      box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+    }
+
+    .btn-reject {
+      background: #EA4335;
+      color: white;
+    }
+
+    .btn-reject:hover {
+      background: #D33828;
+      box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-icon {
+      font-size: 4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-text {
+      color: #94A3B8;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-modal {
+      flex: 1;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-modal-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-modal-cancel:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-modal-confirm {
+      background: #4285F4;
+      color: white;
+    }
+
+    .btn-modal-confirm:hover {
+      background: #3367D6;
+    }
+
+    .btn-modal-confirm.approve {
+      background: #34A853;
+    }
+
+    .btn-modal-confirm.approve:hover {
+      background: #2E9549;
+    }
+
+    .btn-modal-confirm.reject {
+      background: #EA4335;
+    }
+
+    .btn-modal-confirm.reject:hover {
+      background: #D33828;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="../../index.html" class="navbar-brand">
+      🎓 BVDU Event Management
+    </a>
+    <div class="nav-menu">
+      <a href="dashboard.html" class="nav-link">🎯 Events</a>
+      <a href="od-forms.html" class="nav-link">📋 OD Forms</a>
+      <a href="../../index.html" class="nav-link" id="logoutBtn">🚪 Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Review Event</h1>
+      <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+    </div>
+
+    <!-- Event Details -->
+    <div class="event-details" id="eventDetails">
+      <!-- Event details will be loaded here -->
+    </div>
+
+    <!-- Full Event Information -->
+    <div class="section">
+      <h3 class="section-title">📋 Event Details</h3>
+      <div id="eventInfo"></div>
+    </div>
+
+    <!-- Faculty Action Section -->
+    <div class="faculty-action-section" id="facultyActionSection">
+      <h3 class="action-title">⚖️ Your Decision</h3>
+      
+      <div class="form-group">
+        <label class="form-label">Comments / Reason (Required)</label>
+        <textarea 
+          id="facultyComments" 
+          class="form-textarea" 
+          placeholder="Please provide your reasoning for approving or rejecting this event..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-reject" onclick="showConfirmModal('reject')">
+          ❌ Reject Event
+        </button>
+        <button class="btn btn-approve" onclick="showConfirmModal('approve')">
+          ✅ Approve Event
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <div class="modal-icon" id="modalIcon">⚠️</div>
+      <h2 class="modal-title" id="modalTitle">Confirm Action</h2>
+      <p class="modal-text" id="modalText">Are you sure you want to proceed?</p>
+      <div class="modal-buttons">
+        <button class="btn-modal btn-modal-cancel" onclick="closeConfirmModal()">Cancel</button>
+        <button class="btn-modal btn-modal-confirm" id="confirmBtn" onclick="submitDecision()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentEvent = null;
+    let currentAction = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadEventDetails();
+    });
+
+    // Load Event Details
+    function loadEventDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventId = urlParams.get('id');
+
+      if (!eventId) {
+        alert('Event not found!');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      const events = JSON.parse(localStorage.getItem('bvdu_events')) || [];
+      currentEvent = events.find(e => e.event_id === eventId);
+
+      if (!currentEvent) {
+        alert('Event not found!');
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      renderEventDetails();
+      renderEventInfo();
+
+      // Hide action section if already reviewed
+      if (currentEvent.faculty_status && currentEvent.faculty_status !== 'pending') {
+        document.getElementById('facultyActionSection').style.display = 'none';
+      }
+    }
+
+    // Render Event Details
+    function renderEventDetails() {
+      document.getElementById('eventDetails').innerHTML = `
+        <div class="event-icon-large">${currentEvent.icon || '🎉'}</div>
+        <h2 class="event-title-large">${currentEvent.event_name}</h2>
+        <div class="event-meta-large">
+          <span class="event-meta-item-large">📅 ${currentEvent.event_date}</span>
+          <span class="event-meta-item-large">🕒 ${currentEvent.start_time} - ${currentEvent.end_time}</span>
+          <span class="event-meta-item-large">📍 ${currentEvent.venue}</span>
+        </div>
+        <div>
+          <span class="badge badge-category">${currentEvent.event_type}</span>
+          ${currentEvent.tags ? currentEvent.tags.split(',').map(tag => 
+            `<span class="badge badge-category">${tag.trim()}</span>`
+          ).join('') : ''}
+        </div>
+      `;
+    }
+
+    // Render Event Info
+    function renderEventInfo() {
+      // Format target audience (can be array or string)
+      let audienceDisplay = 'All Students';
+      if (currentEvent.target_audience) {
+        if (Array.isArray(currentEvent.target_audience)) {
+          audienceDisplay = currentEvent.target_audience.join(', ');
+        } else {
+          audienceDisplay = currentEvent.target_audience;
+        }
+      }
+
+      // Format equipment needs
+      let equipmentHTML = '';
+      if (currentEvent.equipment_needs) {
+        const eq = currentEvent.equipment_needs;
+        const hasEquipment = eq.wirelessMics > 0 || eq.collarMics > 0 || eq.chairs > 0 || eq.table > 0 || eq.waterBottles > 0;
+        if (hasEquipment) {
+          equipmentHTML = `
+          <div style="margin-top: 2rem;">
+            <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">🎛️ Equipment Requirements:</h4>
+            <div class="info-grid" style="margin-top: 1rem;">
+              ${eq.wirelessMics > 0 ? `<div class="info-item"><div class="info-label">Wireless Mics</div><div class="info-value">${eq.wirelessMics}</div></div>` : ''}
+              ${eq.collarMics > 0 ? `<div class="info-item"><div class="info-label">Collar Mics</div><div class="info-value">${eq.collarMics}</div></div>` : ''}
+              ${eq.chairs > 0 ? `<div class="info-item"><div class="info-label">Chairs</div><div class="info-value">${eq.chairs}</div></div>` : ''}
+              ${eq.table > 0 ? `<div class="info-item"><div class="info-label">Tables</div><div class="info-value">${eq.table}</div></div>` : ''}
+              ${eq.waterBottles > 0 ? `<div class="info-item"><div class="info-label">Water Bottles</div><div class="info-value">${eq.waterBottles}</div></div>` : ''}
+            </div>
+          </div>
+          `;
+        }
+      }
+
+      document.getElementById('eventInfo').innerHTML = `
+        <p class="section-content" style="margin-bottom: 1.5rem;">${currentEvent.event_description || 'No description available'}</p>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Event Type</div>
+            <div class="info-value">${currentEvent.event_type || currentEvent.event_category}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Target Audience</div>
+            <div class="info-value">${audienceDisplay}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Expected Attendees</div>
+            <div class="info-value">${currentEvent.expected_participants || currentEvent.expected_attendees || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Budget</div>
+            <div class="info-value">₹${currentEvent.budget || '0'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">External Attendees</div>
+            <div class="info-value">${currentEvent.external_attendees === 'yes' ? 'Yes' : 'No'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Hosting Club</div>
+            <div class="info-value">${currentEvent.organizing_club || currentEvent.hosting_club || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Event Leader</div>
+            <div class="info-value">${currentEvent.event_leader_name || 'N/A'}</div>
+          </div>
+        </div>
+
+        ${currentEvent.registration_link ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">🔗 Registration Link:</h4>
+          <p class="section-content"><a href="${currentEvent.registration_link}" target="_blank" style="color: #4285F4; text-decoration: none; word-break: break-all;">${currentEvent.registration_link}</a></p>
+        </div>
+        ` : ''}
+
+        ${currentEvent.photo_album ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">📁 Photo Album Folder:</h4>
+          <p class="section-content"><a href="${currentEvent.photo_album}" target="_blank" style="color: #4285F4; text-decoration: none; word-break: break-all;">${currentEvent.photo_album}</a></p>
+        </div>
+        ` : ''}
+
+        ${currentEvent.learning_outcomes ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">📚 Learning Outcomes:</h4>
+          <p class="section-content">${currentEvent.learning_outcomes}</p>
+        </div>
+        ` : ''}
+
+        ${currentEvent.key_speakers ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">🎤 Key Speakers:</h4>
+          <p class="section-content">${currentEvent.key_speakers}</p>
+        </div>
+        ` : ''}
+
+        ${equipmentHTML}
+
+        ${currentEvent.tags ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">🏷️ Tags:</h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
+            ${currentEvent.tags.split(',').map(tag => 
+              `<span class="badge badge-category">${tag.trim()}</span>`
+            ).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        ${currentEvent.external_attendees === 'yes' ? `
+        <div style="margin-top: 2rem;">
+          <h4 style="color: #E2E8F0; font-weight: 600; margin-bottom: 1rem;">📍 Campus Location:</h4>
+          <div style="border-radius: 1rem; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 1rem;">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.6380848425937!2d73.05629587516476!3d19.031037553192967!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c3004632ef29%3A0xe747324bfb1a6836!2sBharati%20Vidyapeeth%20Department%20of%20Management%20Studies%20(Off%20Campus)!5e0!3m2!1sen!2sin!4v1731586745632!5m2!1sen!2sin" 
+              width="100%" 
+              height="300" 
+              style="border:0;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <div style="padding: 1rem; background: rgba(66, 133, 244, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+              <p style="color: #4285F4; font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">Bharati Vidyapeeth Department of Management Studies</p>
+              <p style="color: #94A3B8; font-size: 0.85rem;">Sector 3, Sector 4, Kharghar, Navi Mumbai, Maharashtra 410210</p>
+              <a href="https://www.google.com/maps/place/Bharati+Vidyapeeth+Department+of+Management+Studies+(Off+Campus)/@19.0310375,73.0562959,17z" 
+                 target="_blank" 
+                 style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: #4285F4; font-size: 0.85rem; text-decoration: none; font-weight: 600;">
+                🗺️ View on Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+        ` : ''}
+      `;
+    }
+
+    // Show Confirm Modal
+    function showConfirmModal(action) {
+      const comments = document.getElementById('facultyComments').value.trim();
+      
+      if (!comments) {
+        alert('Please provide your comments/reasoning before making a decision.');
+        document.getElementById('facultyComments').focus();
+        return;
+      }
+
+      currentAction = action;
+      const modal = document.getElementById('confirmModal');
+      const modalIcon = document.getElementById('modalIcon');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalText = document.getElementById('modalText');
+      const confirmBtn = document.getElementById('confirmBtn');
+
+      if (action === 'approve') {
+        modalIcon.textContent = '✅';
+        modalTitle.textContent = 'Approve Event?';
+        modalText.textContent = 'Are you sure you want to approve this event? This event will be published and become visible to all students.';
+        confirmBtn.className = 'btn-modal btn-modal-confirm approve';
+        confirmBtn.textContent = 'Yes, Approve';
+      } else {
+        modalIcon.textContent = '❌';
+        modalTitle.textContent = 'Reject Event?';
+        modalText.textContent = 'Are you sure you want to reject this event? The event leader will be notified of your decision.';
+        confirmBtn.className = 'btn-modal btn-modal-confirm reject';
+        confirmBtn.textContent = 'Yes, Reject';
+      }
+
+      modal.classList.add('active');
+    }
+
+    // Close Confirm Modal
+    function closeConfirmModal() {
+      document.getElementById('confirmModal').classList.remove('active');
+      currentAction = null;
+    }
+
+    // Submit Decision
+    function submitDecision() {
+      const comments = document.getElementById('facultyComments').value.trim();
+      
+      // Update event in localStorage
+      const events = JSON.parse(localStorage.getItem('bvdu_events')) || [];
+      const eventIndex = events.findIndex(e => e.event_id === currentEvent.event_id);
+
+      if (eventIndex !== -1) {
+        events[eventIndex].faculty_status = currentAction === 'approve' ? 'approved' : 'rejected';
+        events[eventIndex].faculty_reason = comments;
+        events[eventIndex].faculty_timestamp = new Date().toLocaleString();
+        events[eventIndex].faculty_name = 'Dr. Faculty Name'; // Replace with actual faculty name
+
+        localStorage.setItem('bvdu_events', JSON.stringify(events));
+
+        // Show success message
+        closeConfirmModal();
+        alert(`Event ${currentAction === 'approve' ? 'approved' : 'rejected'} successfully!`);
+        window.location.href = 'dashboard.html';
+      }
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to logout?')) {
+        window.location.href = '../../login.html';
+      }
+    });
+  </script>
+</body>
+</html>

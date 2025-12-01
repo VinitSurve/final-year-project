@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OD Forms - Faculty - BVDU</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+
+ <script src="../../js/particles.js" defer></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0E27;
+      color: #E2E8F0;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(66, 133, 244, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(52, 168, 83, 0.08), transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Animated Particles */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-20px) translateX(10px); }
+      50% { transform: translateY(-10px) translateX(-10px); }
+      75% { transform: translateY(-30px) translateX(5px); }
+    }
+
+    .particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: rgba(66, 133, 244, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: float 15s infinite;
+      box-shadow: 0 0 10px rgba(66, 133, 244, 0.4);
+    }
+
+    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 40%; left: 30%; animation-delay: 2s; background: rgba(52, 168, 83, 0.6); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
+    .particle:nth-child(3) { top: 60%; left: 50%; animation-delay: 4s; }
+    .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; background: rgba(251, 188, 4, 0.6); box-shadow: 0 0 10px rgba(251, 188, 4, 0.4); }
+    .particle:nth-child(5) { top: 30%; left: 80%; animation-delay: 8s; }
+    .particle:nth-child(6) { top: 70%; left: 20%; animation-delay: 10s; background: rgba(52, 168, 83, 0.6); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: #94A3B8;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    .nav-link.active {
+      color: #4285F4;
+      background: rgba(66, 133, 244, 0.15);
+    }
+
+    .page-header {
+      margin: 2rem 0;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4, #34A853);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: #64748B;
+      font-size: 1.1rem;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .faculty-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(52, 168, 83, 0.15);
+      border: 1px solid rgba(52, 168, 83, 0.3);
+      border-radius: 2rem;
+      color: #34A853;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(66, 133, 244, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+    }
+
+    .stat-label {
+      color: #64748B;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      line-height: 1;
+    }
+
+    .stat-trend {
+      font-size: 0.75rem;
+      color: #34A853;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Tabs */
+    .tabs-container {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin: 2rem 0;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      background: rgba(66, 133, 244, 0.1);
+      color: #4285F4;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      color: white;
+    }
+
+    .tab-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Filter and View Buttons */
+    .filter-btn, .view-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(26, 31, 58, 0.8);
+      color: #94A3B8;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-btn:hover, .view-btn:hover {
+      background: rgba(66, 133, 244, 0.1);
+      border-color: #4285F4;
+      color: #4285F4;
+      transform: translateY(-1px);
+    }
+
+    .filter-btn.active, .view-btn.active {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      border-color: transparent;
+      color: white;
+    }
+
+    /* Grid View */
+    .forms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Calendar View */
+    .calendar-view {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .calendar-header {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .calendar-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .calendar-date {
+      font-weight: 700;
+      color: #4285F4;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(66, 133, 244, 0.3);
+    }
+
+    .calendar-forms {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Old tabs style - keep for compatibility */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: #64748B;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      font-size: 1rem;
+    }
+
+    .tab:hover {
+      color: #4285F4;
+    }
+
+    .tab.active {
+      color: #4285F4;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #4285F4;
+    }
+
+    .tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 0.5rem;
+      background: rgba(66, 133, 244, 0.2);
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #4285F4;
+      margin-left: 0.5rem;
+    }
+
+    /* Forms List */
+    .forms-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .form-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-card:hover {
+      border-color: rgba(66, 133, 244, 0.3);
+      box-shadow: 0 8px 32px rgba(66, 133, 244, 0.15);
+    }
+
+    .form-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .form-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-meta {
+      display: flex;
+      gap: 1rem;
+      color: #64748B;
+      font-size: 0.875rem;
+    }
+
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-pending {
+      background: rgba(251, 188, 4, 0.15);
+      color: #FBBC04;
+      border: 1px solid rgba(251, 188, 4, 0.3);
+      animation: pulse-yellow 2s infinite;
+    }
+
+    @keyframes pulse-yellow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 188, 4, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(251, 188, 4, 0); }
+    }
+
+    .student-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info-label {
+      color: #64748B;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .info-value {
+      color: #E2E8F0;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .approval-history {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: rgba(66, 133, 244, 0.1);
+      border-left: 3px solid #4285F4;
+      border-radius: 0.375rem;
+    }
+
+    .history-title {
+      font-weight: 600;
+      color: #4285F4;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .history-item {
+      color: #94A3B8;
+      font-size: 0.875rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      justify-content: flex-start;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      text-decoration: none;
+      width: fit-content;
+      min-width: 140px;
+      max-width: 200px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(66, 133, 244, 0.4);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+      color: #64748B;
+    }
+
+    /* Old form-grid styles - keep for compatibility */
+    .forms-grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .form-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(66, 133, 244, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .form-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-id {
+      color: #64748B;
+      font-size: 0.875rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .badge {
+      padding: 0.375rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-pending {
+      background: rgba(251, 188, 4, 0.15);
+      color: #FBBC04;
+      border: 1px solid rgba(251, 188, 4, 0.3);
+    }
+
+    .badge-approved {
+      background: rgba(52, 168, 83, 0.15);
+      color: #34A853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+
+    .badge-rejected {
+      background: rgba(234, 67, 53, 0.15);
+      color: #EA4335;
+      border: 1px solid rgba(234, 67, 53, 0.3);
+    }
+
+    .form-meta {
+      display: flex;
+      gap: 1rem;
+      color: #64748B;
+      font-size: 0.875rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .leader-decision {
+      background: rgba(66, 133, 244, 0.1);
+      border: 1px solid rgba(66, 133, 244, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .leader-decision-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+
+    .leader-reason {
+      color: #94A3B8;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background: #34A853;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #2E9549;
+      box-shadow: 0 4px 15px rgba(52, 168, 83, 0.4);
+    }
+
+    .btn-danger {
+      background: #EA4335;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-danger:hover {
+      background: #D33828;
+      box-shadow: 0 4px 15px rgba(234, 67, 53, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #64748B;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      color: #E2E8F0;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: rgba(66, 133, 244, 0.5);
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <a href="../../index.html" class="navbar-brand flex items-center gap-3">
+          <span class="text-3xl">🎓</span>
+          <span>BVDU OD Forms</span>
+        </a>
+        <ul class="flex items-center gap-2">
+          <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
+            <span>🎯</span> Events
+          </a></li>
+          <li><a href="od-forms.html" class="nav-link active flex items-center gap-2">
+            <span>📋</span> OD Forms
+          </a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2" id="logoutBtn">
+            <span>🚪</span> Logout
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-6 py-8">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">📋 OD Forms Management</h1>
+        <p class="page-subtitle">Review and approve OD form submissions (after Event Leader approval)</p>
+      </div>
+      <div class="faculty-badge">
+        <span>👨‍🏫</span>
+        <span id="facultyName">Faculty</span>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">🎓</div>
+        </div>
+        <div class="stat-label">Participant ODs Pending</div>
+        <div class="stat-value" id="participantPendingCount">0</div>
+        <div class="stat-trend">
+          <span>⏳</span> Awaiting your review
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">🤝</div>
+        </div>
+        <div class="stat-label">Volunteer ODs Pending</div>
+        <div class="stat-value" style="color: #FBBC04;" id="volunteerPendingCount">0</div>
+        <div class="stat-trend">
+          <span>⏳</span> Awaiting your review
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">✅</div>
+        </div>
+        <div class="stat-label">Approved This Week</div>
+        <div class="stat-value" style="color: #34A853;" id="approvedCount">0</div>
+        <div class="stat-trend">
+          <span>📈</span> All OD forms
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">⚡</div>
+        </div>
+        <div class="stat-label">Total Reviewed</div>
+        <div class="stat-value" id="totalReviewed">0</div>
+        <div class="stat-trend">
+          <span>📊</span> This month
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button class="tab-btn active" onclick="switchTab('participant')">
+        <span>🎓</span>
+        Participant OD Forms
+        <span class="tab-badge" id="participantBadge">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('volunteer')">
+        <span>🤝</span>
+        Volunteer OD Forms
+        <span class="tab-badge" id="volunteerBadge">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('all')">
+        <span>📋</span>
+        All OD Forms
+        <span class="tab-badge" id="allBadge">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('approved')">
+        <span>✅</span>
+        Approved
+        <span class="tab-badge" id="approvedBadge">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('rejected')">
+        <span>❌</span>
+        Rejected
+        <span class="tab-badge" id="rejectedBadge">0</span>
+      </button>
+    </div>
+
+    <!-- View Options for Participant/Volunteer Tabs -->
+    <div id="simpleViewControls" style="display: none; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem;">
+        <span style="color: #94A3B8; font-weight: 600; font-size: 0.875rem;">View:</span>
+        <button class="view-btn active" onclick="changeView('list')" id="simpleViewList" title="List View">
+          📄 List
+        </button>
+        <button class="view-btn" onclick="changeView('grid')" id="simpleViewGrid" title="Grid View">
+          🔲 Grid
+        </button>
+        <button class="view-btn" onclick="changeView('calendar')" id="simpleViewCalendar" title="Calendar View">
+          📅 Calendar
+        </button>
+      </div>
+    </div>
+
+    <!-- Filters and View Options for All/Approved/Rejected Tabs -->
+    <div id="filterControls" style="display: none; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <!-- Role Filter -->
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <span style="color: #94A3B8; font-weight: 600; font-size: 0.875rem;">Filter by Role:</span>
+          <button class="filter-btn active" onclick="filterByRole('all')" id="filterAll">
+            📋 All
+          </button>
+          <button class="filter-btn" onclick="filterByRole('participant')" id="filterParticipant">
+            🎓 Participant
+          </button>
+          <button class="filter-btn" onclick="filterByRole('volunteer')" id="filterVolunteer">
+            🤝 Volunteer
+          </button>
+        </div>
+        
+        <!-- View Layout Options -->
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <span style="color: #94A3B8; font-weight: 600; font-size: 0.875rem;">View:</span>
+          <button class="view-btn active" onclick="changeView('list')" id="viewList" title="List View">
+            📄 List
+          </button>
+          <button class="view-btn" onclick="changeView('grid')" id="viewGrid" title="Grid View">
+            🔲 Grid
+          </button>
+          <button class="view-btn" onclick="changeView('calendar')" id="viewCalendar" title="Calendar View">
+            📅 Calendar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forms List -->
+    <div id="formsContainer">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3 class="empty-title">Loading forms...</h3>
+        <p class="empty-description">Please wait while we fetch the submissions.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let allForms = [];
+    let currentTab = 'participant';
+    let currentRoleFilter = 'all';
+    
+    // Store view preference per tab
+    let tabViews = {
+      'participant': 'list',
+      'volunteer': 'list',
+      'all': 'list',
+      'approved': 'list',
+      'rejected': 'list'
+    };
+
+    // Check Authentication
+    function checkAuth() {
+      console.log('Faculty OD Forms Dashboard - Mock Mode');
+      currentUser = { id: 'faculty-1', name: 'Dr. Faculty Member', role: 'faculty' };
+      // Initialize mock data with Event Leader approvals
+      initializeFacultyMockData();
+      loadForms();
+      return currentUser;
+    }
+
+    // Initialize mock data with Event Leader approval
+    function initializeFacultyMockData() {
+      const existingForms = localStorage.getItem('bvdu_od_forms');
+      
+      // Only initialize if empty - otherwise keep existing data
+      if (!existingForms) {
+        const mockODForms = [
+          // Participant forms with Event Leader approvals/rejections
+          {
+            form_id: 'OD-2025-001',
+            student_name: 'Rahul Kumar',
+            roll_number: 'CS2021034',
+            course: 'B.Tech Computer Science',
+            semester: 'VI',
+            division: 'A',
+            contact: '+91 98765 11111',
+            role: 'participant',
+            event_name: 'AI Summit 2025',
+            event_type: 'Conference',
+            event_date: '2025-12-15',
+            submission_date: '2025-11-10T09:00:00',
+            status: 'approved_by_event_leader',
+            event_leader_review_date: '2025-11-11T14:30:00',
+            subjects: [
+              { subject_id: 'SUB-001', name: 'Data Structures', date: '2025-12-15', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Amit Sharma', event_leader_status: 'approved', event_leader_remarks: 'Approved for conference', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-002', name: 'Web Technologies', date: '2025-12-15', time: '11:45 AM - 01:15 PM', faculty: 'Prof. Priya Singh', event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-003', name: 'Web Technologies Lab', date: '2025-12-15', time: '02:00 PM - 04:00 PM', faculty: 'Prof. Priya Singh', event_leader_status: 'rejected', event_leader_remarks: 'Lab cannot be missed', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-004', name: 'Computer Networks', date: '2025-12-15', time: '04:15 PM - 05:45 PM', faculty: 'Dr. Rajesh Kumar', event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' }
+            ]
+          },
+          {
+            form_id: 'OD-2025-003',
+            student_name: 'Priya Patel',
+            roll_number: 'CS2021045',
+            course: 'B.Tech Computer Science',
+            semester: 'VI',
+            division: 'A',
+            contact: '+91 98765 43210',
+            role: 'participant',
+            event_name: 'Hackathon 2025',
+            event_type: 'Competition',
+            event_date: '2025-12-20',
+            submission_date: '2025-11-12T14:30:00',
+            status: 'approved_by_event_leader',
+            event_leader_review_date: '2025-11-13T10:00:00',
+            subjects: [
+              { subject_id: 'SUB-005', name: 'DBMS', date: '2025-12-20', time: '09:00 AM - 10:30 AM', faculty: 'Dr. Sheetal Verma', event_leader_status: 'approved', event_leader_remarks: 'Good opportunity', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-006', name: 'Artificial Intelligence', date: '2025-12-20', time: '11:00 AM - 12:30 PM', faculty: 'Prof. Amit Joshi', event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' }
+            ]
+          },
+          {
+            form_id: 'OD-2025-007',
+            student_name: 'Neha Sharma',
+            roll_number: 'CS2021067',
+            course: 'B.Tech Computer Science',
+            semester: 'IV',
+            division: 'A',
+            contact: '+91 98765 67890',
+            role: 'participant',
+            event_name: 'Web Dev Bootcamp',
+            event_type: 'Workshop',
+            event_date: '2025-11-18',
+            submission_date: '2025-11-08T10:15:00',
+            status: 'partially_approved_by_event_leader',
+            event_leader_review_date: '2025-11-09T11:20:00',
+            subjects: [
+              { subject_id: 'SUB-007', name: 'DSA', date: '2025-11-18', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Priya Kumar', event_leader_status: 'approved', event_leader_remarks: 'Approved for bootcamp', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-008', name: 'DBMS', date: '2025-11-18', time: '02:00 PM - 03:30 PM', faculty: 'Prof. Rajesh Patil', event_leader_status: 'rejected', event_leader_remarks: 'Important class test scheduled', faculty_status: '', faculty_remarks: '' }
+            ]
+          },
+          // Volunteer forms with Event Leader approvals/rejections
+          {
+            form_id: 'OD-2025-005',
+            student_name: 'Sneha Deshmukh',
+            roll_number: 'CS2021089',
+            course: 'B.Tech Computer Science',
+            semester: 'VI',
+            division: 'B',
+            contact: '+91 98765 54321',
+            role: 'volunteer',
+            event_name: 'IEEE Technical Symposium',
+            event_type: 'Conference',
+            event_date: '2025-03-28',
+            submission_date: '2025-03-15T10:30:00',
+            prep_days: ['2025-03-26', '2025-03-27'],
+            status: 'approved_by_event_leader',
+            event_leader_review_date: '2025-03-16T09:45:00',
+            subjects: [
+              { subject_id: 'SUB-009', name: 'Operating Systems', date: '2025-03-26', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Ramesh Kumar', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: 'Prep day approved', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-010', name: 'Computer Networks', date: '2025-03-26', time: '02:00 PM - 03:30 PM', faculty: 'Prof. Sunita Sharma', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-011', name: 'Software Engineering', date: '2025-03-27', time: '09:00 AM - 10:30 AM', faculty: 'Dr. Vikram Singh', is_prep_day: true, event_leader_status: 'rejected', event_leader_remarks: 'Important lecture - mid-term review', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-012', name: 'Database Management', date: '2025-03-27', time: '11:00 AM - 12:30 PM', faculty: 'Prof. Anjali Mehta', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-013', name: 'Web Technologies', date: '2025-03-28', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Priya Joshi', is_prep_day: false, event_leader_status: 'approved', event_leader_remarks: 'Event day approved', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-014', name: 'Cloud Computing', date: '2025-03-28', time: '02:00 PM - 03:30 PM', faculty: 'Prof. Rajesh Patil', is_prep_day: false, event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' }
+            ]
+          },
+          {
+            form_id: 'OD-2025-008',
+            student_name: 'Vikram Mehta',
+            roll_number: 'CS2021101',
+            course: 'B.Tech Computer Science',
+            semester: 'VI',
+            division: 'A',
+            contact: '+91 98765 98765',
+            role: 'volunteer',
+            event_name: 'Cultural Fest 2025',
+            event_type: 'Cultural',
+            event_date: '2025-12-05',
+            submission_date: '2025-11-14T16:00:00',
+            prep_days: ['2025-12-03', '2025-12-04'],
+            status: 'approved_by_event_leader',
+            event_leader_review_date: '2025-11-15T10:30:00',
+            subjects: [
+              { subject_id: 'SUB-015', name: 'Machine Learning', date: '2025-12-03', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Suresh Nair', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: 'Approved for college fest', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-016', name: 'Big Data Analytics', date: '2025-12-04', time: '02:00 PM - 03:30 PM', faculty: 'Prof. Kavita Jain', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-017', name: 'IoT', date: '2025-12-05', time: '09:00 AM - 10:30 AM', faculty: 'Dr. Anand Kulkarni', is_prep_day: false, event_leader_status: 'approved', event_leader_remarks: '', faculty_status: '', faculty_remarks: '' }
+            ]
+          },
+          {
+            form_id: 'OD-2025-010',
+            student_name: 'Karan Mehta',
+            roll_number: 'CS2021145',
+            course: 'B.Tech Computer Science',
+            semester: 'IV',
+            division: 'B',
+            contact: '+91 98765 11223',
+            role: 'volunteer',
+            event_name: 'Sports Tournament - College Team',
+            event_type: 'Sports',
+            event_date: '2025-11-22',
+            submission_date: '2025-11-13T11:00:00',
+            prep_days: ['2025-11-21'],
+            status: 'partially_approved_by_event_leader',
+            event_leader_review_date: '2025-11-14T09:00:00',
+            subjects: [
+              { subject_id: 'SUB-018', name: 'Java Programming', date: '2025-11-21', time: '10:00 AM - 11:30 AM', faculty: 'Dr. Ramesh Sharma', is_prep_day: true, event_leader_status: 'approved', event_leader_remarks: 'Prep day approved', faculty_status: '', faculty_remarks: '' },
+              { subject_id: 'SUB-019', name: 'Data Structures', date: '2025-11-22', time: '09:00 AM - 10:30 AM', faculty: 'Prof. Meena Patel', is_prep_day: false, event_leader_status: 'rejected', event_leader_remarks: 'Important class test', faculty_status: '', faculty_remarks: '' }
+            ]
+          }
+        ];
+
+        localStorage.setItem('bvdu_od_forms', JSON.stringify(mockODForms));
+        console.log('Faculty mock OD forms initialized with Event Leader approvals');
+      }
+    }
+
+    function loadForms() {
+      // Mock OD forms data - in production, fetch from server/localStorage
+      allForms = JSON.parse(localStorage.getItem('bvdu_od_forms')) || [];
+      updateStats();
+    }
+
+    // Load Forms
+    function loadForms() {
+      try {
+        // Load from localStorage
+        const storedForms = localStorage.getItem('bvdu_od_forms');
+        if (storedForms) {
+          allForms = JSON.parse(storedForms);
+          // Filter only forms that are approved by event leader and need faculty review
+          allForms = allForms.filter(f => 
+            f.status && (f.status.includes('approved_by_event_leader') || f.status === 'pending_faculty' || f.status.includes('faculty'))
+          );
+        } else {
+          allForms = [];
+        }
+        updateStats();
+        renderForms();
+      } catch (error) {
+        console.error('Error loading forms:', error);
+        allForms = [];
+        updateStats();
+        renderForms();
+      }
+    }
+
+    // Update Stats
+    function updateStats() {
+      // Only count pending (not yet reviewed) forms for participant and volunteer tabs
+      const participantPending = allForms.filter(f => {
+        if (f.role !== 'participant') return false;
+        const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+        return !hasReview;
+      }).length;
+      
+      const volunteerPending = allForms.filter(f => {
+        if (f.role !== 'volunteer') return false;
+        const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+        return !hasReview;
+      }).length;
+      
+      // Calculate approved this week
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      const approvedThisWeek = allForms.filter(f => 
+        f.status && f.status.includes('approved_by_faculty') && 
+        f.faculty_review_date && new Date(f.faculty_review_date) >= oneWeekAgo
+      ).length;
+      
+      // Total reviewed (any faculty decision)
+      const totalReviewed = allForms.filter(f => f.faculty_review_date).length;
+      
+      document.getElementById('participantPendingCount').textContent = participantPending;
+      document.getElementById('volunteerPendingCount').textContent = volunteerPending;
+      document.getElementById('approvedCount').textContent = approvedThisWeek;
+      document.getElementById('totalReviewed').textContent = totalReviewed;
+      
+      // Update tab badges - participant and volunteer show only pending
+      const participantCount = allForms.filter(f => {
+        if (f.role !== 'participant') return false;
+        const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+        return !hasReview;
+      }).length;
+      
+      const volunteerCount = allForms.filter(f => {
+        if (f.role !== 'volunteer') return false;
+        const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+        return !hasReview;
+      }).length;
+      
+      document.getElementById('participantBadge').textContent = participantCount;
+      document.getElementById('volunteerBadge').textContent = volunteerCount;
+      document.getElementById('allBadge').textContent = allForms.length;
+      
+      // Update approved and rejected badges
+      const approvedForms = allForms.filter(f => {
+        if (!f.subjects) return false;
+        const reviewedSubjects = f.subjects.filter(s => s.faculty_status && s.event_leader_status === 'approved');
+        return reviewedSubjects.length > 0;
+      }).length;
+      
+      const rejectedForms = allForms.filter(f => {
+        if (!f.subjects) return false;
+        const reviewedSubjects = f.subjects.filter(s => s.faculty_status && s.event_leader_status === 'approved');
+        const hasRejection = reviewedSubjects.some(s => s.faculty_status === 'rejected');
+        return hasRejection;
+      }).length;
+      
+      document.getElementById('approvedBadge').textContent = approvedForms;
+      document.getElementById('rejectedBadge').textContent = rejectedForms;
+    }
+
+    // Switch Tab
+    function switchTab(tab) {
+      currentTab = tab;
+      currentRoleFilter = 'all'; // Reset filter when switching tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.tab-btn').classList.add('active');
+      
+      // Show/hide controls based on tab
+      const filterControls = document.getElementById('filterControls');
+      const simpleViewControls = document.getElementById('simpleViewControls');
+      
+      if (['participant', 'volunteer'].includes(tab)) {
+        // Show only view controls for participant/volunteer
+        filterControls.style.display = 'none';
+        simpleViewControls.style.display = 'block';
+        
+        // Update simple view button states
+        document.querySelectorAll('#simpleViewControls .view-btn').forEach(btn => btn.classList.remove('active'));
+        const currentView = tabViews[tab];
+        if (currentView === 'list') document.getElementById('simpleViewList').classList.add('active');
+        else if (currentView === 'grid') document.getElementById('simpleViewGrid').classList.add('active');
+        else if (currentView === 'calendar') document.getElementById('simpleViewCalendar').classList.add('active');
+      } else {
+        // Show filters and view controls for all/approved/rejected
+        filterControls.style.display = 'block';
+        simpleViewControls.style.display = 'none';
+        
+        // Reset filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('filterAll').classList.add('active');
+        
+        // Update view button states
+        document.querySelectorAll('#filterControls .view-btn').forEach(btn => btn.classList.remove('active'));
+        const currentView = tabViews[tab];
+        if (currentView === 'list') document.getElementById('viewList').classList.add('active');
+        else if (currentView === 'grid') document.getElementById('viewGrid').classList.add('active');
+        else if (currentView === 'calendar') document.getElementById('viewCalendar').classList.add('active');
+      }
+      
+      renderForms();
+    }
+
+    // Filter by Role
+    function filterByRole(role) {
+      currentRoleFilter = role;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderForms();
+    }
+
+    // Change View
+    function changeView(view) {
+      // Store view preference for current tab
+      tabViews[currentTab] = view;
+      
+      // Update button states based on which control panel is visible
+      if (['participant', 'volunteer'].includes(currentTab)) {
+        document.querySelectorAll('#simpleViewControls .view-btn').forEach(btn => btn.classList.remove('active'));
+        if (view === 'list') document.getElementById('simpleViewList').classList.add('active');
+        else if (view === 'grid') document.getElementById('simpleViewGrid').classList.add('active');
+        else if (view === 'calendar') document.getElementById('simpleViewCalendar').classList.add('active');
+      } else {
+        document.querySelectorAll('#filterControls .view-btn').forEach(btn => btn.classList.remove('active'));
+        if (view === 'list') document.getElementById('viewList').classList.add('active');
+        else if (view === 'grid') document.getElementById('viewGrid').classList.add('active');
+        else if (view === 'calendar') document.getElementById('viewCalendar').classList.add('active');
+      }
+      
+      renderForms();
+    }
+
+    // Render Forms
+    function renderForms() {
+      const container = document.getElementById('formsContainer');
+      
+      // Filter forms based on current tab
+      let filteredForms = allForms;
+      if (currentTab === 'participant') {
+        // Show only pending (not yet reviewed) participant forms
+        filteredForms = allForms.filter(f => {
+          if (f.role !== 'participant') return false;
+          // Check if any subject has been reviewed by faculty
+          const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+          return !hasReview; // Only show forms without faculty review
+        });
+      } else if (currentTab === 'volunteer') {
+        // Show only pending (not yet reviewed) volunteer forms
+        filteredForms = allForms.filter(f => {
+          if (f.role !== 'volunteer') return false;
+          // Check if any subject has been reviewed by faculty
+          const hasReview = f.subjects && f.subjects.some(s => s.faculty_status);
+          return !hasReview; // Only show forms without faculty review
+        });
+      } else if (currentTab === 'approved') {
+        // Show all forms reviewed by faculty (regardless of individual subject decisions)
+        filteredForms = allForms.filter(f => {
+          if (!f.subjects) return false;
+          const reviewedSubjects = f.subjects.filter(s => s.faculty_status && s.event_leader_status === 'approved');
+          return reviewedSubjects.length > 0;
+        });
+      } else if (currentTab === 'rejected') {
+        // Show forms where at least one subject is rejected by faculty
+        filteredForms = allForms.filter(f => {
+          if (!f.subjects) return false;
+          const reviewedSubjects = f.subjects.filter(s => s.faculty_status && s.event_leader_status === 'approved');
+          const hasRejection = reviewedSubjects.some(s => s.faculty_status === 'rejected');
+          return hasRejection;
+        });
+      }
+
+      // Apply role filter for all, approved, rejected tabs
+      if (['all', 'approved', 'rejected'].includes(currentTab) && currentRoleFilter !== 'all') {
+        filteredForms = filteredForms.filter(f => f.role === currentRoleFilter);
+      }
+
+      if (filteredForms.length === 0) {
+        const tabNames = {
+          'participant': 'participant',
+          'volunteer': 'volunteer',
+          'all': 'all',
+          'approved': 'approved',
+          'rejected': 'rejected'
+        };
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h3 class="empty-title">All Caught Up!</h3>
+            <p class="empty-description">No ${tabNames[currentTab]} forms to display at the moment.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Render based on current view
+      const currentView = tabViews[currentTab];
+      if (currentView === 'grid') {
+        renderGridView(filteredForms, container);
+      } else if (currentView === 'calendar') {
+        renderCalendarView(filteredForms, container);
+      } else {
+        renderListView(filteredForms, container);
+      }
+    }
+
+    // Render List View (default)
+    function renderListView(filteredForms, container) {
+
+      const formsHTML = filteredForms.map(form => {
+        const totalSubjects = form.subjects ? form.subjects.length : 0;
+        const approvedByLeader = form.subjects ? form.subjects.filter(s => s.event_leader_status === 'approved').length : 0;
+        const rejectedByLeader = totalSubjects - approvedByLeader;
+        const roleBadge = form.role === 'volunteer' 
+          ? '<span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.75rem; background: rgba(251, 188, 4, 0.15); border: 1px solid rgba(251, 188, 4, 0.3); border-radius: 1rem; color: #FBBC04; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">🤝 Volunteer</span>'
+          : '<span style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.75rem; background: rgba(66, 133, 244, 0.15); border: 1px solid rgba(66, 133, 244, 0.3); border-radius: 1rem; color: #4285F4; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem;">🎓 Participant</span>';
+        
+        // Status badge
+        let statusBadge = '<span class="status-badge status-pending">⏳ Pending Faculty Review</span>';
+        if (form.faculty_review_date) {
+          // Once faculty has reviewed, show as approved (will go to HOD)
+          statusBadge = '<span class="status-badge" style="background: rgba(52, 168, 83, 0.15); color: #34A853; border: 1px solid rgba(52, 168, 83, 0.3);">✅ Reviewed by Faculty</span>';
+        }
+        
+        return `
+        <div class="form-card">
+          <div class="form-card-header">
+            <div>
+              <h3 class="form-title">${form.event_name} ${roleBadge}</h3>
+              <div class="form-meta">
+                <span>📋 ${form.form_id}</span>
+                <span>•</span>
+                <span>📅 ${formatDate(form.submission_date)}</span>
+                <span>•</span>
+                <span>${form.event_type}</span>
+              </div>
+            </div>
+            ${statusBadge}
+          </div>
+
+          <div class="student-info">
+            <div class="info-item">
+              <span class="info-label">Student Name</span>
+              <span class="info-value">${form.student_name}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Roll Number</span>
+              <span class="info-value">${form.roll_number}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Course</span>
+              <span class="info-value">${form.course}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Semester</span>
+              <span class="info-value">${form.semester} - Division ${form.division}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Event Date</span>
+              <span class="info-value">${formatDate(form.event_date)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Total Subjects</span>
+              <span class="info-value">${totalSubjects} subjects</span>
+            </div>
+          </div>
+
+          <div class="approval-history">
+            <div class="history-title">📊 Event Leader's Decision</div>
+            <div class="history-item">
+              ✅ Approved: <strong>${approvedByLeader}</strong> subjects (you can review these)
+              <br>
+              ❌ Rejected: <strong>${rejectedByLeader}</strong> subjects (locked - cannot review)
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <a href="review-od-${form.role}.html?id=${form.form_id}" class="btn btn-primary">
+              📝 Review Subjects
+            </a>
+          </div>
+        </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `<div class="forms-list">${formsHTML}</div>`;
+    }
+
+    // Render Grid View
+    function renderGridView(filteredForms, container) {
+      const formsHTML = filteredForms.map(form => {
+        const totalSubjects = form.subjects ? form.subjects.length : 0;
+        const approvedByLeader = form.subjects ? form.subjects.filter(s => s.event_leader_status === 'approved').length : 0;
+        const roleBadge = form.role === 'volunteer' ? '🤝 Volunteer' : '🎓 Participant';
+        
+        let statusBadge = '⏳ Pending';
+        if (form.faculty_review_date) {
+          statusBadge = '✅ Reviewed';
+        }
+        
+        return `
+        <div class="form-card" style="height: 100%;">
+          <div class="form-card-header">
+            <div>
+              <h3 class="form-title" style="font-size: 1rem;">${form.event_name}</h3>
+              <div class="form-meta" style="font-size: 0.75rem;">
+                <span>${roleBadge}</span>
+              </div>
+            </div>
+            <span style="font-size: 0.75rem; color: #34A853;">${statusBadge}</span>
+          </div>
+
+          <div class="student-info" style="gap: 0.5rem;">
+            <div class="info-item">
+              <span class="info-label">Student</span>
+              <span class="info-value" style="font-size: 0.875rem;">${form.student_name}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date</span>
+              <span class="info-value" style="font-size: 0.875rem;">${formatDate(form.event_date)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Subjects</span>
+              <span class="info-value" style="font-size: 0.875rem;">${approvedByLeader}/${totalSubjects}</span>
+            </div>
+          </div>
+
+          <div class="action-buttons" style="margin-top: 1rem; padding-top: 1rem;">
+            <a href="review-od-${form.role}.html?id=${form.form_id}" class="btn btn-primary" style="width: 100%; justify-content: center;">
+              📝 Review
+            </a>
+          </div>
+        </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `<div class="forms-grid">${formsHTML}</div>`;
+    }
+
+    // Render Calendar View
+    function renderCalendarView(filteredForms, container) {
+      // Group forms by event date
+      const formsByDate = {};
+      filteredForms.forEach(form => {
+        const dateKey = formatDate(form.event_date);
+        if (!formsByDate[dateKey]) {
+          formsByDate[dateKey] = [];
+        }
+        formsByDate[dateKey].push(form);
+      });
+
+      // Sort dates
+      const sortedDates = Object.keys(formsByDate).sort((a, b) => {
+        return new Date(formsByDate[b][0].event_date) - new Date(formsByDate[a][0].event_date);
+      });
+
+      const calendarHTML = sortedDates.map(dateKey => {
+        const forms = formsByDate[dateKey];
+        const formsHTML = forms.map(form => {
+          const roleBadge = form.role === 'volunteer' 
+            ? '<span style="color: #FBBC04;">🤝 Volunteer</span>' 
+            : '<span style="color: #4285F4;">🎓 Participant</span>';
+          
+          let statusIcon = '⏳';
+          if (form.faculty_review_date) {
+            statusIcon = '✅';
+          }
+          
+          return `
+            <div class="form-card">
+              <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                  <h4 style="font-weight: 700; color: #E2E8F0; margin-bottom: 0.25rem;">${form.event_name}</h4>
+                  <div style="font-size: 0.875rem; color: #94A3B8;">
+                    ${form.student_name} • ${form.roll_number}
+                  </div>
+                  <div style="font-size: 0.75rem; margin-top: 0.25rem;">
+                    ${roleBadge}
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                  <span style="font-size: 1.5rem;">${statusIcon}</span>
+                  <a href="review-od-${form.role}.html?id=${form.form_id}" class="btn btn-primary" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    Review
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div>
+            <div class="calendar-date">📅 ${dateKey}</div>
+            <div class="calendar-forms">${formsHTML}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="calendar-view">
+          <div class="calendar-header">📅 Forms by Event Date</div>
+          <div class="calendar-grid">${calendarHTML}</div>
+        </div>
+      `;
+    }
+
+    // Format Date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', { 
+        day: '2-digit', 
+        month: 'short', 
+        year: 'numeric' 
+      });
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      window.location.href = '../../login.html';
+    });
+
+    // Initialize
+    checkAuth();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Participant OD Form - Faculty - BVDU DMS</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../js/particles.js" defer></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0E27;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated Background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(66, 133, 244, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 70%, rgba(52, 168, 83, 0.08), transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Animated Particles */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-20px) translateX(10px); }
+      50% { transform: translateY(-10px) translateX(-10px); }
+      75% { transform: translateY(-30px) translateX(5px); }
+    }
+
+    .particle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: rgba(66, 133, 244, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: float 15s infinite;
+      box-shadow: 0 0 10px rgba(66, 133, 244, 0.4);
+    }
+
+    .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { top: 40%; left: 30%; animation-delay: 2s; background: rgba(52, 168, 83, 0.6); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
+    .particle:nth-child(3) { top: 60%; left: 50%; animation-delay: 4s; }
+    .particle:nth-child(4) { top: 80%; left: 70%; animation-delay: 6s; background: rgba(251, 188, 4, 0.6); box-shadow: 0 0 10px rgba(251, 188, 4, 0.4); }
+    .particle:nth-child(5) { top: 30%; left: 80%; animation-delay: 8s; }
+    .particle:nth-child(6) { top: 70%; left: 20%; animation-delay: 10s; background: rgba(52, 168, 83, 0.6); box-shadow: 0 0 10px rgba(52, 168, 83, 0.4); }
+
+    .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      color: #94A3B8;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+      background: rgba(66, 133, 244, 0.1);
+    }
+
+    /* Page Header */
+    .page-header {
+      padding: 3rem 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      color: #94A3B8;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      color: #E2E8F0;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Info Card */
+    .info-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .info-label {
+      color: #64748B;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .info-value {
+      color: #E2E8F0;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    /* Event Leader Decision Banner */
+    .leader-decision {
+      background: rgba(66, 133, 244, 0.1);
+      border-left: 4px solid #4285F4;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .leader-decision h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #4285F4;
+      margin-bottom: 1rem;
+    }
+
+    .decision-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .decision-stat {
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .decision-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .decision-stat-label {
+      color: #94A3B8;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Subjects Table */
+    .subjects-section {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 1.5rem;
+    }
+
+    .subjects-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .subjects-table thead th {
+      background: rgba(0, 0, 0, 0.3);
+      color: #94A3B8;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .subjects-table thead th:first-child {
+      border-top-left-radius: 0.5rem;
+    }
+
+    .subjects-table thead th:last-child {
+      border-top-right-radius: 0.5rem;
+    }
+
+    .subjects-table tbody tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .subjects-table tbody tr:hover {
+      background: rgba(66, 133, 244, 0.05);
+    }
+
+    .subjects-table tbody tr.locked-row {
+      background: rgba(244, 67, 54, 0.05);
+      opacity: 0.7;
+    }
+
+    .subjects-table tbody tr.locked-row:hover {
+      background: rgba(244, 67, 54, 0.08);
+    }
+
+    .subjects-table tbody td {
+      padding: 1rem;
+      color: #E2E8F0;
+      font-size: 0.875rem;
+    }
+
+    .leader-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .leader-approved {
+      background: rgba(52, 168, 83, 0.15);
+      color: #34A853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+
+    .leader-rejected {
+      background: rgba(244, 67, 54, 0.15);
+      color: #F44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .locked-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(244, 67, 54, 0.1);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      border-radius: 1rem;
+      color: #F44336;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+
+    /* Radio Button Group */
+    .radio-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-option {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(26, 31, 58, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .radio-label:hover {
+      background: rgba(26, 31, 58, 0.95);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.approve {
+      background: rgba(52, 168, 83, 0.2);
+      border-color: #34A853;
+      color: #34A853;
+      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.1);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-label.reject {
+      background: rgba(234, 67, 53, 0.2);
+      border-color: #EA4335;
+      color: #EA4335;
+      box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.1);
+    }
+
+    .radio-option input[type="radio"]:disabled + .radio-label {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    /* Remarks Row */
+    .remarks-row {
+      background: rgba(244, 67, 54, 0.1) !important;
+      border-top: 1px solid rgba(244, 67, 54, 0.2) !important;
+    }
+
+    .remarks-row td {
+      padding: 1rem !important;
+    }
+
+    .remarks-label {
+      font-weight: 600;
+      color: #F44336;
+      margin-bottom: 0.5rem;
+      display: block;
+      font-size: 0.875rem;
+    }
+
+    .remarks-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.5rem;
+      color: #E2E8F0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .remarks-textarea:focus {
+      outline: none;
+      border-color: #F44336;
+      box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.1);
+    }
+
+    /* Leader Remarks Display */
+    .leader-remarks {
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: rgba(66, 133, 244, 0.1);
+      border-left: 3px solid #4285F4;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: #94A3B8;
+    }
+
+    .leader-remarks strong {
+      color: #4285F4;
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Action Buttons */
+    .action-section {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .bulk-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-approve {
+      background: rgba(52, 168, 83, 0.15);
+      color: #34A853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: rgba(52, 168, 83, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(52, 168, 83, 0.3);
+    }
+
+    .btn-reject {
+      background: rgba(244, 67, 54, 0.15);
+      color: #F44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .btn-reject:hover:not(:disabled) {
+      background: rgba(244, 67, 54, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(66, 133, 244, 0.4);
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .alert-error {
+      background: rgba(244, 67, 54, 0.15);
+      color: #F44336;
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .alert-success {
+      background: rgba(52, 168, 83, 0.15);
+      color: #34A853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+
+    .alert-info {
+      background: rgba(66, 133, 244, 0.15);
+      color: #4285F4;
+      border: 1px solid rgba(66, 133, 244, 0.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bulk-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .subjects-table {
+        font-size: 0.75rem;
+      }
+
+      .subjects-table thead th,
+      .subjects-table tbody td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Particles -->
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <a href="../../index.html" class="navbar-brand flex items-center gap-3">
+          <span class="text-3xl">🎓</span>
+          <span>BVDU OD Forms</span>
+        </a>
+        <ul class="flex items-center gap-2">
+          <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
+            <span>🎯</span> Events
+          </a></li>
+          <li><a href="od-forms.html" class="nav-link flex items-center gap-2">
+            <span>📋</span> OD Forms
+          </a></li>
+          <li><a href="#" class="nav-link flex items-center gap-2" id="logoutBtn">
+            <span>🚪</span> Logout
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-6 py-8">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">📝 Review Participant OD Form</h1>
+        <p class="page-subtitle">Review subjects and make decisions (Event Leader approved only)</p>
+      </div>
+      <a href="od-forms.html" class="back-btn">
+        <span>←</span> Back to Dashboard
+      </a>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <!-- Form Information -->
+    <div class="info-card">
+      <div class="info-grid" id="formInfo">
+        <div class="info-item">
+          <span class="info-label">Form ID</span>
+          <span class="info-value" id="formId">Loading...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Student Name</span>
+          <span class="info-value" id="studentName">Loading...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Roll Number</span>
+          <span class="info-value" id="rollNumber">Loading...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Course</span>
+          <span class="info-value" id="course">Loading...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Name</span>
+          <span class="info-value" id="eventName">Loading...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Date</span>
+          <span class="info-value" id="eventDate">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Leader Decision Summary -->
+    <div class="leader-decision">
+      <h3>📊 Event Leader's Review Summary</h3>
+      <p style="color: #94A3B8; margin-bottom: 1rem;">Below is the Event Leader's decision on each subject. You can only review subjects they approved.</p>
+      <div class="decision-stats">
+        <div class="decision-stat">
+          <div class="decision-stat-value" style="color: #34A853;" id="leaderApprovedCount">0</div>
+          <div class="decision-stat-label">Approved by Leader</div>
+        </div>
+        <div class="decision-stat">
+          <div class="decision-stat-value" style="color: #F44336;" id="leaderRejectedCount">0</div>
+          <div class="decision-stat-label">Rejected by Leader (Locked)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subjects Review -->
+    <div class="subjects-section">
+      <h2 class="section-title">📚 Subjects to Review</h2>
+      <table class="subjects-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Event Leader Decision</th>
+            <th>Your Decision</th>
+          </tr>
+        </thead>
+        <tbody id="subjectsTableBody">
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem;">
+              <span style="font-size: 2rem;">⏳</span>
+              <p style="margin-top: 0.5rem; color: #64748B;">Loading subjects...</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="action-section">
+      <h2 class="section-title">⚡ Quick Actions</h2>
+      <div class="bulk-actions">
+        <button class="btn btn-approve" onclick="approveAllPending()">
+          ✅ Approve All Pending
+        </button>
+        <button class="btn btn-reject" onclick="rejectAllPending()">
+          ❌ Reject All Pending
+        </button>
+        <button class="btn btn-primary" onclick="submitDecisions()">
+          💾 Submit Final Decision
+        </button>
+      </div>
+      <div class="alert alert-info">
+        <span>ℹ️</span>
+        <span><strong>Note:</strong> All subjects approved by Event Leader must have your decision (Approve/Reject) before submission. Rejected subjects require remarks.</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentForm = null;
+    let formId = null;
+
+    // Get form ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    formId = urlParams.get('id');
+
+    if (!formId) {
+      showAlert('error', 'No form ID provided');
+      setTimeout(() => window.location.href = 'od-forms.html', 2000);
+    }
+
+    // Load form data
+    function loadForm() {
+      try {
+        const forms = JSON.parse(localStorage.getItem('bvdu_od_forms')) || [];
+        currentForm = forms.find(f => f.form_id === formId);
+
+        if (!currentForm) {
+          showAlert('error', 'Form not found');
+          setTimeout(() => window.location.href = 'od-forms.html', 2000);
+          return;
+        }
+
+        // Display form info
+        document.getElementById('formId').textContent = currentForm.form_id;
+        document.getElementById('studentName').textContent = currentForm.student_name;
+        document.getElementById('rollNumber').textContent = currentForm.roll_number;
+        document.getElementById('course').textContent = `${currentForm.course} - Sem ${currentForm.semester}`;
+        document.getElementById('eventName').textContent = currentForm.event_name;
+        document.getElementById('eventDate').textContent = formatDate(currentForm.event_date);
+
+        // Calculate leader stats
+        const approved = currentForm.subjects.filter(s => s.event_leader_status === 'approved').length;
+        const rejected = currentForm.subjects.filter(s => s.event_leader_status === 'rejected').length;
+        document.getElementById('leaderApprovedCount').textContent = approved;
+        document.getElementById('leaderRejectedCount').textContent = rejected;
+
+        // Render subjects
+        renderSubjects();
+      } catch (error) {
+        console.error('Error loading form:', error);
+        showAlert('error', 'Error loading form data');
+      }
+    }
+
+    // Render subjects table
+    function renderSubjects() {
+      const tbody = document.getElementById('subjectsTableBody');
+      if (!currentForm || !currentForm.subjects || currentForm.subjects.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2rem;">
+              <span style="font-size: 2rem;">📭</span>
+              <p style="margin-top: 0.5rem; color: #64748B;">No subjects found</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      let html = '';
+      currentForm.subjects.forEach((subject, index) => {
+        const isRejectedByLeader = subject.event_leader_status === 'rejected';
+        const isApprovedByLeader = subject.event_leader_status === 'approved';
+        const rowClass = isRejectedByLeader ? 'locked-row' : '';
+        
+        // Leader status badge
+        const leaderBadge = isApprovedByLeader 
+          ? '<div class="flex items-center gap-2"><span style="display: inline-block; width: 1.5rem; height: 1.5rem; background: #34A853; border-radius: 50%; text-align: center; line-height: 1.5rem; font-size: 0.875rem;">✓</span><span class="font-semibold text-green-400" style="font-size: 0.95rem;">Approved</span></div>'
+          : '<div class="flex items-center gap-2"><span style="display: inline-block; width: 1.5rem; height: 1.5rem; background: #F44336; border-radius: 50%; text-align: center; line-height: 1.5rem; font-size: 0.875rem;">✗</span><span class="font-semibold text-red-400" style="font-size: 0.95rem;">Rejected</span></div>';
+        
+        const lockedBadge = isRejectedByLeader 
+          ? '<span class="locked-badge">🔒 Rejected</span>'
+          : '';
+
+        // Faculty decision radio buttons (disabled if rejected by leader)
+        const facultyStatus = subject.faculty_status || '';
+        const disabled = isRejectedByLeader ? 'disabled' : '';
+        
+        html += `
+          <tr class="${rowClass}" data-subject-id="${subject.subject_id}">
+            <td>${formatDate(subject.date)}</td>
+            <td>${subject.time}</td>
+            <td>
+              <strong>${subject.name}</strong>
+              ${lockedBadge}
+              ${subject.event_leader_remarks ? `
+                <div class="leader-remarks">
+                  <strong>Event Leader's Remarks:</strong>
+                  ${subject.event_leader_remarks}
+                </div>
+              ` : ''}
+            </td>
+            <td>${subject.faculty}</td>
+            <td>${leaderBadge}</td>
+            <td>
+              ${isRejectedByLeader ? `
+                <span style="color: #64748B; font-size: 0.875rem;">🔒 Rejected by Event Leader</span>
+              ` : `
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input 
+                      type="radio" 
+                      name="decision_${subject.subject_id}" 
+                      id="approve_${subject.subject_id}" 
+                      value="approved"
+                      ${facultyStatus === 'approved' ? 'checked' : ''}
+                      ${disabled}
+                      onchange="updateSubjectStatus('${subject.subject_id}', 'approved')"
+                    >
+                    <label for="approve_${subject.subject_id}" class="radio-label approve">✅ Approve</label>
+                  </div>
+                  <div class="radio-option">
+                    <input 
+                      type="radio" 
+                      name="decision_${subject.subject_id}" 
+                      id="reject_${subject.subject_id}" 
+                      value="rejected"
+                      ${facultyStatus === 'rejected' ? 'checked' : ''}
+                      ${disabled}
+                      onchange="updateSubjectStatus('${subject.subject_id}', 'rejected')"
+                    >
+                    <label for="reject_${subject.subject_id}" class="radio-label reject">❌ Reject</label>
+                  </div>
+                </div>
+              `}
+            </td>
+          </tr>
+        `;
+
+        // Add remarks row if faculty rejected
+        if (facultyStatus === 'rejected' && !isRejectedByLeader) {
+          html += `
+            <tr class="remarks-row" id="remarks_row_${subject.subject_id}">
+              <td colspan="6">
+                <label class="remarks-label">Rejection Reason:</label>
+                <textarea 
+                  class="remarks-textarea" 
+                  id="remarks_${subject.subject_id}"
+                  placeholder="Explain why you are rejecting this subject..."
+                  onchange="updateSubjectRemarks('${subject.subject_id}')"
+                >${subject.faculty_remarks || ''}</textarea>
+              </td>
+            </tr>
+          `;
+        }
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // Update subject status
+    function updateSubjectStatus(subjectId, status) {
+      const subject = currentForm.subjects.find(s => s.subject_id === subjectId);
+      if (subject) {
+        subject.faculty_status = status;
+        if (status === 'approved') {
+          subject.faculty_remarks = ''; // Clear remarks if approved
+        }
+        saveForm();
+        renderSubjects(); // Re-render to show/hide remarks row
+      }
+    }
+
+    // Update subject remarks
+    function updateSubjectRemarks(subjectId) {
+      const remarks = document.getElementById(`remarks_${subjectId}`).value;
+      const subject = currentForm.subjects.find(s => s.subject_id === subjectId);
+      if (subject) {
+        subject.faculty_remarks = remarks;
+        saveForm();
+      }
+    }
+
+    // Approve all pending (only Event Leader approved subjects)
+    function approveAllPending() {
+      let count = 0;
+      currentForm.subjects.forEach(subject => {
+        if (subject.event_leader_status === 'approved' && !subject.faculty_status) {
+          subject.faculty_status = 'approved';
+          subject.faculty_remarks = '';
+          count++;
+        }
+      });
+      
+      if (count > 0) {
+        saveForm();
+        renderSubjects();
+        showAlert('success', `Approved ${count} pending subject(s)`);
+      } else {
+        showAlert('info', 'No pending subjects to approve');
+      }
+    }
+
+    // Reject all pending
+    function rejectAllPending() {
+      let count = 0;
+      currentForm.subjects.forEach(subject => {
+        if (subject.event_leader_status === 'approved' && !subject.faculty_status) {
+          subject.faculty_status = 'rejected';
+          count++;
+        }
+      });
+      
+      if (count > 0) {
+        saveForm();
+        renderSubjects();
+        showAlert('info', `Rejected ${count} pending subject(s). Please add remarks for each.`);
+      } else {
+        showAlert('info', 'No pending subjects to reject');
+      }
+    }
+
+    // Submit final decision
+    function submitDecisions() {
+      // Validate: All Event Leader approved subjects must have faculty decision
+      const needDecision = currentForm.subjects.filter(s => 
+        s.event_leader_status === 'approved' && !s.faculty_status
+      );
+
+      if (needDecision.length > 0) {
+        showAlert('error', `Please make a decision for all ${needDecision.length} approved subject(s)`);
+        return;
+      }
+
+      // Validate: All rejected subjects must have remarks
+      const needRemarks = currentForm.subjects.filter(s => 
+        s.faculty_status === 'rejected' && !s.faculty_remarks?.trim()
+      );
+
+      if (needRemarks.length > 0) {
+        showAlert('error', `Please add remarks for all ${needRemarks.length} rejected subject(s)`);
+        return;
+      }
+
+      // Mark as reviewed by faculty - faculty has authority to approve/reject
+      // This will go to HOD for final decision
+      currentForm.status = 'approved_by_faculty';
+      currentForm.faculty_review_date = new Date().toISOString();
+      saveForm();
+      
+      showAlert('success', '✅ Faculty review submitted successfully!');
+      setTimeout(() => window.location.href = 'od-forms.html', 2000);
+    }
+
+    // Save form to localStorage
+    function saveForm() {
+      try {
+        const forms = JSON.parse(localStorage.getItem('bvdu_od_forms')) || [];
+        const index = forms.findIndex(f => f.form_id === currentForm.form_id);
+        if (index !== -1) {
+          forms[index] = currentForm;
+          localStorage.setItem('bvdu_od_forms', JSON.stringify(forms));
+        }
+      } catch (error) {
+        console.error('Error saving form:', error);
+      }
+    }
+
+    // Show alert
+    function showAlert(type, message) {
+      const container = document.getElementById('alertContainer');
+      const icons = { error: '❌', success: '✅', info: 'ℹ️' };
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+      container.appendChild(alert);
+      setTimeout(() => alert.remove(), 5000);
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-IN', { 
+        day: '2-digit', 
+        month: 'short', 
+        year: 'numeric' 
+      });
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      window.location.href = '../../login.html';
+    });
+
+    // Initialize
+    loadForm();
+  </script>
+</body>
+</html>
