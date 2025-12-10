@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Forms - BVDU OD Forms DMS</title>
+  <title>My Forms - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -689,7 +689,7 @@
       <div class="flex items-center justify-between">
         <a href="../../index.html" class="navbar-brand flex items-center gap-3">
           <span class="text-3xl">🎓</span>
-          <span>BVDU OD Forms</span>
+          <span>BVDU CampusFlow</span>
         </a>
         <ul class="flex items-center gap-2">
           <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
@@ -797,119 +797,60 @@
     let allForms = [];
     let filteredForms = [];
 
-    // Mock data for prototype
-    const mockForms = [
-      {
-        id: 'OD-2025-001',
-        event_name: 'National Tech Symposium 2025',
-        event_type: 'Conference',
-        event_date: '2025-03-15',
-        status: 'approved',
-        submission_date: '2025-03-01',
-        total_lectures: 3,
-        total_hours: 4.5,
-        workflow: {
-          submitted: { status: 'completed', date: '2025-03-01', time: '10:30 AM' },
-          event_leader: { status: 'completed', date: '2025-03-02', time: '02:15 PM', person: 'Dr. Rahul Sharma', remarks: null },
-          faculty: { status: 'completed', date: '2025-03-03', time: '11:45 AM', person: 'Prof. Sanjay Gupta', remarks: null },
-          hod: { status: 'completed', date: '2025-03-05', time: '04:20 PM', person: 'Dr. Meera Joshi', remarks: 'Approved - Good participation' }
-        }
-      },
-      {
-        id: 'OD-2025-002',
-        event_name: 'IEEE Coding Competition',
-        event_type: 'Competition',
-        event_date: '2025-03-20',
-        status: 'pending_faculty',
-        submission_date: '2025-03-10',
-        total_lectures: 2,
-        total_hours: 3.0,
-        workflow: {
-          submitted: { status: 'completed', date: '2025-03-10', time: '09:15 AM' },
-          event_leader: { status: 'completed', date: '2025-03-11', time: '03:30 PM', person: 'Prof. Priya Patel', remarks: null },
-          faculty: { status: 'active', date: null, time: null, person: 'Dr. Amit Verma', remarks: null },
-          hod: { status: 'pending', date: null, time: null, person: 'Dr. Meera Joshi', remarks: null }
-        }
-      },
-      {
-        id: 'OD-2025-003',
-        event_name: 'Cultural Fest - Euphoria',
-        event_type: 'Cultural Event',
-        event_date: '2025-02-10',
-        status: 'rejected',
-        submission_date: '2025-02-05',
-        total_lectures: 4,
-        total_hours: 6.0,
-        workflow: {
-          submitted: { status: 'completed', date: '2025-02-05', time: '02:00 PM' },
-          event_leader: { status: 'rejected', date: '2025-02-06', time: '10:30 AM', person: 'Mr. Amit Kumar', remarks: 'Event not aligned with academic curriculum. Insufficient documentation of educational value.' },
-          faculty: { status: 'pending', date: null, time: null, person: 'Prof. Rekha Singh', remarks: null },
-          hod: { status: 'pending', date: null, time: null, person: 'Dr. Meera Joshi', remarks: null }
-        }
-      },
-      {
-        id: 'OD-2025-004',
-        event_name: 'Machine Learning Workshop',
-        event_type: 'Workshop',
-        event_date: '2025-03-25',
-        status: 'pending_event_leader',
-        submission_date: '2025-03-14',
-        total_lectures: 2,
-        total_hours: 3.0,
-        workflow: {
-          submitted: { status: 'completed', date: '2025-03-14', time: '11:00 AM' },
-          event_leader: { status: 'active', date: null, time: null, person: 'Dr. Sarah Johnson', remarks: null },
-          faculty: { status: 'pending', date: null, time: null, person: 'Prof. Rajesh Kumar', remarks: null },
-          hod: { status: 'pending', date: null, time: null, person: 'Dr. Meera Joshi', remarks: null }
-        }
-      },
-      {
-        id: 'OD-2025-005',
-        event_name: 'Hackathon - Code Sprint 2025',
-        event_type: 'Competition',
-        event_date: '2025-03-18',
-        status: 'pending_hod',
-        submission_date: '2025-03-08',
-        total_lectures: 3,
-        total_hours: 4.5,
-        workflow: {
-          submitted: { status: 'completed', date: '2025-03-08', time: '01:30 PM' },
-          event_leader: { status: 'completed', date: '2025-03-09', time: '10:00 AM', person: 'Prof. Vikram Singh', remarks: null },
-          faculty: { status: 'completed', date: '2025-03-12', time: '03:45 PM', person: 'Dr. Neha Sharma', remarks: null },
-          hod: { status: 'active', date: null, time: null, person: 'Dr. Meera Joshi', remarks: null }
-        }
-      }
-    ];
+    // No mock data - using real database only
 
     // Check Authentication
     async function checkAuth() {
       try {
+        // Check sessionStorage first
+        const sessionUser = sessionStorage.getItem('currentUser');
+        if (sessionUser) {
+          const userData = JSON.parse(sessionUser);
+          if (userData && userData.role === 'student') {
+            return userData;
+          }
+        }
+
         if (!supabaseClient) {
-          console.log('Using mock mode');
-          return { id: 'demo', full_name: 'Demo Student' };
+          window.location.href = '../../login.html?from=my-forms';
+          return null;
         }
 
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         
         if (!user || error) {
-          window.location.href = '../../login.html';
+          window.location.href = '../../login.html?from=my-forms';
           return null;
         }
         
-        return user;
+        // Get user profile from users table
+        const { data: profile, error: profileError } = await supabaseClient
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          window.location.href = '../../login.html?from=my-forms';
+          return null;
+        }
+
+        sessionStorage.setItem('currentUser', JSON.stringify(profile));
+        return profile;
       } catch (error) {
         console.error('Auth error:', error);
-        return { id: 'demo', full_name: 'Demo Student' };
+        window.location.href = '../../login.html?from=my-forms';
+        return null;
       }
     }
 
     // Load Forms
     async function loadForms() {
       try {
-        if (!supabaseClient) {
-          // Use mock data
-          allForms = mockForms;
-          filteredForms = [...allForms];
+        if (!supabaseClient || !currentUser) {
+          allForms = [];
+          filteredForms = [];
           updateStats();
           renderForms();
           return;
@@ -919,18 +860,18 @@
           .from('od_forms')
           .select('*')
           .eq('student_id', currentUser.id)
-          .order('submission_date', { ascending: false });
+          .order('created_at', { ascending: false });
 
         if (error) throw error;
 
-        allForms = data || mockForms;
+        allForms = data || [];
         filteredForms = [...allForms];
         updateStats();
         renderForms();
       } catch (error) {
         console.error('Error loading forms:', error);
-        allForms = mockForms;
-        filteredForms = [...allForms];
+        allForms = [];
+        filteredForms = [];
         updateStats();
         renderForms();
       }

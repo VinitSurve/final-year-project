@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - BVDU OD Forms DMS</title>
+  <title>Profile - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -394,7 +394,7 @@
       <div class="flex items-center justify-between">
         <a href="../../index.html" class="navbar-brand flex items-center gap-3">
           <span class="text-3xl">🎓</span>
-          <span>BVDU OD Forms</span>
+          <span>BVDU CampusFlow</span>
         </a>
         <ul class="flex items-center gap-2">
           <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
@@ -599,96 +599,106 @@
     let currentUser = null;
     let isEditMode = false;
 
-    // Mock user data
-    const mockUserData = {
-      id: 'demo-student-1',
-      full_name: 'Rahul Sharma',
-      roll_number: 'CS2021001',
-      course: 'B.Tech Computer Science',
-      semester: 'VI',
-      division: 'A',
-      contact_number: '+91 98765 43210',
-      email: 'rahul.sharma@bvdu.edu.in',
-      member_since: 'January 2024',
-      last_login: 'Today, 10:30 AM'
-    };
-
-    const mockStats = {
-      total: 5,
-      approved: 2,
-      pending: 2,
-      rejected: 1
-    };
-
     // Check Authentication
     async function checkAuth() {
       try {
+        // Check sessionStorage first
+        const sessionUser = sessionStorage.getItem('currentUser');
+        if (sessionUser) {
+          const userData = JSON.parse(sessionUser);
+          if (userData && userData.role === 'student') {
+            currentUser = userData;
+            loadUserProfile(userData);
+            await loadStats();
+            return userData;
+          }
+        }
+
         if (!supabaseClient) {
-          console.log('Using mock mode');
-          currentUser = mockUserData;
-          loadUserProfile(mockUserData);
-          loadStats(mockStats);
-          return mockUserData;
+          window.location.href = '../../login.html?from=profile';
+          return null;
         }
 
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         
         if (!user || error) {
-          window.location.href = '../../login.html';
+          window.location.href = '../../login.html?from=profile';
           return null;
         }
         
         const { data: profile, error: profileError } = await supabaseClient
-          .from('profiles')
+          .from('users')
           .select('*')
           .eq('id', user.id)
           .single();
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          window.location.href = '../../login.html?from=profile';
+          return null;
+        }
 
         currentUser = profile;
+        sessionStorage.setItem('currentUser', JSON.stringify(profile));
         loadUserProfile(profile);
         await loadStats();
         return profile;
       } catch (error) {
         console.error('Auth error:', error);
-        currentUser = mockUserData;
-        loadUserProfile(mockUserData);
-        loadStats(mockStats);
-        return mockUserData;
+        window.location.href = '../../login.html?from=profile';
+        return null;
       }
     }
 
     // Load User Profile
     function loadUserProfile(user) {
-      document.getElementById('profileName').textContent = user.full_name;
-      document.getElementById('fullName').textContent = user.full_name;
-      document.getElementById('rollNumber').textContent = user.roll_number;
+      const fullName = user.full_name || `${user.first_name || ''} ${user.middle_name || ''} ${user.surname || ''}`.trim();
+      
+      document.getElementById('profileName').textContent = fullName;
+      document.getElementById('fullName').textContent = fullName;
+      document.getElementById('rollNumber').textContent = user.roll_number || 'N/A';
       document.getElementById('email').textContent = user.email;
-      document.getElementById('contactNumber').textContent = user.contact_number;
-      document.getElementById('course').textContent = user.course;
-      document.getElementById('semester').textContent = user.semester;
-      document.getElementById('division').textContent = user.division;
-      document.getElementById('memberSince').textContent = user.member_since || 'January 2024';
-      document.getElementById('lastLogin').textContent = user.last_login || 'Today';
+      document.getElementById('contactNumber').textContent = user.phone || 'N/A';
+      document.getElementById('course').textContent = user.course || 'N/A';
+      document.getElementById('semester').textContent = user.year ? `Year ${user.year}` : 'N/A';
+      document.getElementById('division').textContent = user.division || 'N/A';
+      
+      const memberSince = user.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently';
+      document.getElementById('memberSince').textContent = memberSince;
+      
+      const lastLogin = user.last_login ? new Date(user.last_login).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Today';
+      document.getElementById('lastLogin').textContent = lastLogin;
 
-      // Set avatar initial
-      const initial = user.full_name.charAt(0).toUpperCase();
-      document.getElementById('profileAvatar').textContent = initial;
+      // Set profile photo if available
+      const avatarElement = document.getElementById('profileAvatar');
+      console.log('Profile photo URL:', user.profile_photo_url); // Debug log
+      if (user.profile_photo_url) {
+        // Show profile photo
+        avatarElement.style.backgroundImage = `url('${user.profile_photo_url}')`;
+        avatarElement.style.backgroundSize = 'cover';
+        avatarElement.style.backgroundPosition = 'center';
+        avatarElement.style.backgroundRepeat = 'no-repeat';
+        avatarElement.textContent = '';
+        console.log('Profile photo applied'); // Debug log
+      } else {
+        // Show initial letter
+        const initial = fullName.charAt(0).toUpperCase();
+        avatarElement.textContent = initial;
+        avatarElement.style.backgroundImage = 'none';
+        console.log('No profile photo URL found, showing initial'); // Debug log
+      }
     }
 
     // Load Stats
-    async function loadStats(mockData = null) {
-      if (mockData) {
-        document.getElementById('totalSubmissions').textContent = mockData.total;
-        document.getElementById('approvedCount').textContent = mockData.approved;
-        document.getElementById('pendingCount').textContent = mockData.pending;
-        document.getElementById('rejectedCount').textContent = mockData.rejected;
-        return;
-      }
-
+    async function loadStats() {
       try {
-        if (!supabaseClient) return;
+        if (!supabaseClient || !currentUser) {
+          document.getElementById('totalSubmissions').textContent = '0';
+          document.getElementById('approvedCount').textContent = '0';
+          document.getElementById('pendingCount').textContent = '0';
+          document.getElementById('rejectedCount').textContent = '0';
+          return;
+        }
 
         const { data, error } = await supabaseClient
           .from('od_forms')
@@ -698,10 +708,10 @@
         if (error) throw error;
 
         const stats = {
-          total: data.length,
-          approved: data.filter(f => f.status === 'approved').length,
-          pending: data.filter(f => f.status.includes('pending')).length,
-          rejected: data.filter(f => f.status === 'rejected').length
+          total: data?.length || 0,
+          approved: data?.filter(f => f.status === 'hod_approved')?.length || 0,
+          pending: data?.filter(f => f.status?.includes('pending') || f.status?.includes('submitted'))?.length || 0,
+          rejected: data?.filter(f => f.status?.includes('rejected'))?.length || 0
         };
 
         document.getElementById('totalSubmissions').textContent = stats.total;
@@ -710,6 +720,10 @@
         document.getElementById('rejectedCount').textContent = stats.rejected;
       } catch (error) {
         console.error('Error loading stats:', error);
+        document.getElementById('totalSubmissions').textContent = '0';
+        document.getElementById('approvedCount').textContent = '0';
+        document.getElementById('pendingCount').textContent = '0';
+        document.getElementById('rejectedCount').textContent = '0';
       }
     }
 

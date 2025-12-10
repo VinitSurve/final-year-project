@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Event - BVDU Event Management</title>
+  <title>Create Event - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -146,12 +146,20 @@
       align-items: center;
       gap: 1rem;
       position: relative;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .step:hover {
+      background: rgba(66, 133, 244, 0.1);
     }
 
     .step::after {
       content: '';
       position: absolute;
-      left: calc(100% + 1rem);
+      left: calc(100% + .07rem);
       width: 2rem;
       height: 2px;
       background: rgba(255, 255, 255, 0.1);
@@ -387,7 +395,7 @@
       background: rgba(66, 133, 244, 0.15);
       border: 1px solid rgba(66, 133, 244, 0.3);
       color: #4285F4;
-      font-size: 1.25rem;
+      font-size: .8rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -473,8 +481,6 @@
       backdrop-filter: blur(20px);
       position: sticky;
       top: 100px;
-      max-height: calc(100vh - 120px);
-      overflow-y: auto;
       overflow-x: hidden;
       width: 100%;
       box-sizing: border-box;
@@ -1027,15 +1033,15 @@
 
     <!-- Progress Steps -->
     <div class="progress-steps">
-      <div class="step active" data-step="1">
+      <div class="step active" data-step="1" onclick="goToStep(1)" style="cursor: pointer;">
         <div class="step-number">1</div>
         <div class="step-label">Event Details</div>
       </div>
-      <div class="step" data-step="2">
+      <div class="step" data-step="2" onclick="goToStep(2)" style="cursor: pointer;">
         <div class="step-number">2</div>
         <div class="step-label">Content & Audience</div>
       </div>
-      <div class="step" data-step="3">
+      <div class="step" data-step="3" onclick="goToStep(3)" style="cursor: pointer;">
         <div class="step-number">3</div>
         <div class="step-label">Logistics & Media</div>
       </div>
@@ -1254,6 +1260,42 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Will certificates be provided to participants?</label>
+            <div class="radio-group">
+              <label class="radio-item">
+                <input type="radio" name="certificatesProvided" value="yes" onchange="toggleCertificateInfo()">
+                <span>Yes</span>
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="certificatesProvided" value="no" checked onchange="toggleCertificateInfo()">
+                <span>No</span>
+              </label>
+            </div>
+            <span class="form-hint">If yes, a Google Drive folder for certificates will be created when the event is approved by faculty.</span>
+            
+            <!-- Certificate Folder Info -->
+            <div id="certificateInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(52, 168, 83, 0.1); border: 1px solid rgba(52, 168, 83, 0.3); border-radius: 0.75rem;">
+              <p style="color: #34A853; font-size: 0.9rem; margin-bottom: 0.5rem;">📜 Certificate Distribution Plan</p>
+              <p style="color: #94A3B8; font-size: 0.85rem;">After faculty approval, a dedicated folder will be created on Google Drive for uploading participant certificates. You can upload certificates after the event concludes.</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Will attendance be marked for this event?</label>
+            <div class="radio-group">
+              <label class="radio-item">
+                <input type="radio" name="attendanceMarking" value="yes" checked>
+                <span>Yes</span>
+              </label>
+              <label class="radio-item">
+                <input type="radio" name="attendanceMarking" value="no">
+                <span>No</span>
+              </label>
+            </div>
+            <span class="form-hint">Attendance records will help track participation and generate reports.</span>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Budget & Funding (Optional)</label>
             <textarea class="form-textarea" id="budget" placeholder="e.g., Total budget: $500. Requesting $200 from college."></textarea>
           </div>
@@ -1417,11 +1459,71 @@
     let selectedCategory = null;
     let previewUpdateInterval = null;
 
-    // Mock booked slots (in real app, fetch from database)
+    // Check if step fields are completed
+    function isStepCompleted(step) {
+      if (step === 1) {
+        const title = document.getElementById('eventTitle').value.trim();
+        const description = document.getElementById('eventDescription').value.trim();
+        const category = document.getElementById('eventCategory').value;
+        return title && description && category;
+      } else if (step === 2) {
+        const outcomes = document.getElementById('learningOutcomes').value.trim();
+        const audience = document.querySelectorAll('input[name="audience"]:checked');
+        return outcomes && audience.length > 0;
+      } else if (step === 3) {
+        const date = document.getElementById('selectedDate').value;
+        const time = document.getElementById('selectedTime').value;
+        const registrationLink = document.getElementById('registrationLink').value.trim();
+        return date && time && registrationLink;
+      }
+      return false;
+    }
+
+    // Update step completion status
+    function updateStepCompletionStatus() {
+      for (let i = 1; i <= 3; i++) {
+        const stepElement = document.querySelector(`.step[data-step="${i}"]`);
+        if (isStepCompleted(i)) {
+          stepElement.classList.add('completed');
+        } else {
+          stepElement.classList.remove('completed');
+        }
+      }
+    }
+
+    // Step Navigation
+    function goToStep(step) {
+      // Hide current step
+      document.getElementById(`step${currentStep}`).classList.remove('active');
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+
+      // Show target step
+      currentStep = step;
+      document.getElementById(`step${currentStep}`).classList.add('active');
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+
+      // Update step completion status
+      updateStepCompletionStatus();
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Mock booked slots with venue information (in real app, fetch from database)
+    // Structure: { 'YYYY-MM-DD': [{ time: '09:00 - 10:00', venues: ['Seminar Hall (1st Floor)', 'Lab 503'] }] }
     const bookedSlots = {
-      '2025-11-15': ['09:00 - 10:00', '14:00 - 15:00'],
-      '2025-11-20': ['10:00 - 11:00', '11:00 - 12:00', '15:00 - 16:00'],
-      '2025-11-25': ['08:00 - 09:00']
+      '2025-11-15': [
+        { time: '09:00 - 10:00', venues: ['Seminar Hall (1st Floor)'] },
+        { time: '14:00 - 15:00', venues: ['Lab 503', 'Lab 402'] }
+      ],
+      '2025-11-20': [
+        { time: '10:00 - 11:00', venues: ['Seminar Hall (4th Floor)'] },
+        { time: '11:00 - 12:00', venues: ['Lab 401'] },
+        { time: '15:00 - 16:00', venues: ['Seminar Hall (1st Floor)'] }
+      ],
+      '2025-11-25': [
+        { time: '08:00 - 09:00', venues: ['Lab 503', 'Lab 402'] }
+      ]
     };
 
     // Initialize calendar on page load
@@ -1444,15 +1546,25 @@
         const element = document.getElementById(fieldId);
         if (element) {
           element.addEventListener('input', debounce(updatePreviewIfOpen, 500));
+          element.addEventListener('input', debounce(updateStepCompletionStatus, 300));
         }
       });
 
       // Listen to checkboxes and radio buttons
       document.querySelectorAll('input[name="audience"]').forEach(cb => {
         cb.addEventListener('change', updatePreviewIfOpen);
+        cb.addEventListener('change', updateStepCompletionStatus);
       });
 
       document.querySelectorAll('input[name="externalAttendees"]').forEach(radio => {
+        radio.addEventListener('change', updatePreviewIfOpen);
+      });
+
+      document.querySelectorAll('input[name="certificatesProvided"]').forEach(radio => {
+        radio.addEventListener('change', updatePreviewIfOpen);
+      });
+
+      document.querySelectorAll('input[name="attendanceMarking"]').forEach(radio => {
         radio.addEventListener('change', updatePreviewIfOpen);
       });
 
@@ -1501,6 +1613,20 @@
       updatePreviewIfOpen();
     }
 
+    function toggleCertificateInfo() {
+      const certificatesYes = document.querySelector('input[name="certificatesProvided"][value="yes"]').checked;
+      const certificateInfo = document.getElementById('certificateInfo');
+      
+      if (certificatesYes) {
+        certificateInfo.style.display = 'block';
+      } else {
+        certificateInfo.style.display = 'none';
+      }
+      
+      // Update preview if open
+      updatePreviewIfOpen();
+    }
+
     function updateVenueDisplay() {
       const selectedVenues = Array.from(document.querySelectorAll('input[name="venue"]:checked'))
         .map(cb => cb.value);
@@ -1512,24 +1638,24 @@
       } else {
         document.getElementById('displayVenue').textContent = selectedVenues.join(', ');
       }
+      
+      // Re-render calendar to update booking indicators based on selected venues
+      renderCalendar();
     }
 
     // Step Navigation
     function nextStep(step) {
-      // Validate current step before proceeding
-      if (!validateStep(currentStep)) {
-        return;
-      }
-
       // Hide current step
       document.getElementById(`step${currentStep}`).classList.remove('active');
       document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-      document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
 
       // Show next step
       currentStep = step;
       document.getElementById(`step${currentStep}`).classList.add('active');
       document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+
+      // Update step completion status
+      updateStepCompletionStatus();
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1544,57 +1670,47 @@
       currentStep = step;
       document.getElementById(`step${currentStep}`).classList.add('active');
       document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
-      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('completed');
+
+      // Update step completion status
+      updateStepCompletionStatus();
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Validation
-    function validateStep(step) {
-      if (step === 1) {
-        const title = document.getElementById('eventTitle').value.trim();
-        const description = document.getElementById('eventDescription').value.trim();
-        const category = document.getElementById('eventCategory').value;
+    // Validation (only used on final submit)
+    function validateForSubmission() {
+      const errors = [];
+      
+      // Step 1 validation
+      const title = document.getElementById('eventTitle').value.trim();
+      const description = document.getElementById('eventDescription').value.trim();
+      const category = document.getElementById('eventCategory').value;
 
-        if (!title) {
-          alert('Please enter an event title');
-          return false;
-        }
-        if (!description) {
-          alert('Please enter an event description');
-          return false;
-        }
-        if (!category) {
-          alert('Please select a category');
-          return false;
-        }
-      } else if (step === 2) {
-        const outcomes = document.getElementById('learningOutcomes').value.trim();
-        const audience = document.querySelectorAll('input[name="audience"]:checked');
+      if (!title) errors.push('• Event title is required');
+      if (!description) errors.push('• Event description is required');
+      if (!category) errors.push('• Event category is required');
 
-        if (audience.length === 0) {
-          alert('Please select at least one target audience');
-          return false;
-        }
-        if (!outcomes) {
-          alert('Please enter what attendees will learn');
-          return false;
-        }
-      } else if (step === 3) {
-        const date = document.getElementById('selectedDate').value;
-        const time = document.getElementById('selectedTime').value;
-        const registrationLink = document.getElementById('registrationLink').value.trim();
+      // Step 2 validation
+      const outcomes = document.getElementById('learningOutcomes').value.trim();
+      const audience = document.querySelectorAll('input[name="audience"]:checked');
 
-        if (!date || !time) {
-          alert('Please select a date and time from the calendar');
-          return false;
-        }
-        if (!registrationLink) {
-          alert('Please enter a registration link');
-          return false;
-        }
+      if (audience.length === 0) errors.push('• At least one target audience is required');
+      if (!outcomes) errors.push('• Learning outcomes are required');
+
+      // Step 3 validation
+      const date = document.getElementById('selectedDate').value;
+      const time = document.getElementById('selectedTime').value;
+      const registrationLink = document.getElementById('registrationLink').value.trim();
+
+      if (!date || !time) errors.push('• Date and time selection is required');
+      if (!registrationLink) errors.push('• Registration link is required');
+
+      if (errors.length > 0) {
+        alert('Please complete the following required fields:\n\n' + errors.join('\n'));
+        return false;
       }
+      
       return true;
     }
 
@@ -1606,6 +1722,7 @@
       element.classList.add('selected');
       document.getElementById('eventCategory').value = category;
       selectedCategory = category;
+      updateStepCompletionStatus();
     }
 
     // Counter Controls
@@ -1663,7 +1780,7 @@
       for (let day = 1; day <= daysInMonth; day++) {
         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const isToday = today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear;
-        const hasBookings = bookedSlots[dateStr] && bookedSlots[dateStr].length > 0;
+        const hasBookings = hasBookingsForSelectedVenues(dateStr);
         const isSelected = selectedDate === dateStr;
 
         const dayDiv = document.createElement('div');
@@ -1690,6 +1807,56 @@
       renderCalendar();
     }
 
+    // Helper function to check if date has bookings for selected venues
+    function hasBookingsForSelectedVenues(dateStr) {
+      const selectedVenues = getSelectedVenues();
+      
+      // If no venues selected, don't show any bookings
+      if (selectedVenues.length === 0) {
+        return false;
+      }
+      
+      // Check if any bookings match selected venues
+      const dayBookings = bookedSlots[dateStr];
+      if (!dayBookings || dayBookings.length === 0) {
+        return false;
+      }
+      
+      // Check if any booking conflicts with selected venues
+      return dayBookings.some(booking => 
+        booking.venues.some(venue => selectedVenues.includes(venue))
+      );
+    }
+
+    // Helper function to get currently selected venues
+    function getSelectedVenues() {
+      return Array.from(document.querySelectorAll('input[name="venue"]:checked'))
+        .map(cb => cb.value);
+    }
+
+    // Helper function to check if specific time slot is booked for selected venues
+    function isTimeSlotBookedForSelectedVenues(dateStr, timeRange) {
+      const selectedVenues = getSelectedVenues();
+      
+      // If no venues selected, no slots are booked
+      if (selectedVenues.length === 0) {
+        return false;
+      }
+      
+      const dayBookings = bookedSlots[dateStr];
+      if (!dayBookings || dayBookings.length === 0) {
+        return false;
+      }
+      
+      // Check if this time slot is booked for any selected venue
+      const booking = dayBookings.find(b => b.time === timeRange);
+      if (!booking) {
+        return false;
+      }
+      
+      return booking.venues.some(venue => selectedVenues.includes(venue));
+    }
+
     // Time Slots Modal
     function openTimeSlots(dateStr) {
       selectedDate = dateStr;
@@ -1711,7 +1878,7 @@
         const endTime = `${String(hour + 1).padStart(2, '0')}:00`;
         const timeRange = `${startTime} - ${endTime}`;
         
-        const isBooked = bookedSlots[dateStr] && bookedSlots[dateStr].includes(timeRange);
+        const isBooked = isTimeSlotBookedForSelectedVenues(dateStr, timeRange);
         
         timeSlots.push({
           time: timeRange,
@@ -1730,7 +1897,7 @@
         const statusText = slot.available ? 'Available' : 'Booked';
 
         slotsHTML += `
-          <div class="time-slot ${slotClass}" onclick="${slot.available ? `selectTimeSlot('${slot.time}', this)` : ''}">
+          <div class="time-slot ${slotClass}" data-time="${slot.time}" data-available="${slot.available}">
             <span class="time-slot-time">${slot.time}</span>
             <span class="time-slot-status ${statusClass}">
               <span>${statusIcon}</span>
@@ -1741,6 +1908,16 @@
       });
 
       document.getElementById('timeSlotsList').innerHTML = slotsHTML;
+      
+      // Add click event listeners to time slots
+      document.querySelectorAll('.time-slot').forEach(slotElement => {
+        slotElement.addEventListener('click', function() {
+          if (this.dataset.available === 'true') {
+            selectTimeSlot(this.dataset.time, this);
+          }
+        });
+      });
+      
       document.getElementById('timeSlotsModal').classList.add('show');
     }
 
@@ -1804,6 +1981,7 @@
       }
 
       updateTimeSelectionDisplay();
+      updateStepCompletionStatus();
       closeTimeSlots();
     }
 
@@ -2028,7 +2206,15 @@
             </div>
             <div class="preview-info-item">
               <span class="preview-info-label">🌐 External Attendees</span>
-              <span class="preview-info-value">${data.externalAttendees}</span>
+              <span class="preview-info-value">${data.externalAttendees === 'yes' ? 'Allowed' : 'Not Allowed'}</span>
+            </div>
+            <div class="preview-info-item">
+              <span class="preview-info-label">📜 Certificates</span>
+              <span class="preview-info-value">${data.certificatesProvided === 'yes' ? '✅ Will be provided' : '❌ Not provided'}</span>
+            </div>
+            <div class="preview-info-item">
+              <span class="preview-info-label">📊 Attendance</span>
+              <span class="preview-info-value">${data.attendanceMarking === 'yes' ? '✅ Will be marked' : '❌ Not required'}</span>
             </div>
             <div class="preview-info-item">
               <span class="preview-info-label">💰 Budget</span>
@@ -2077,7 +2263,7 @@
 
     // Submit Event
     function submitEvent() {
-      if (!validateStep(3)) {
+      if (!validateForSubmission()) {
         return;
       }
 
@@ -2111,6 +2297,8 @@
         key_speakers: eventData.keySpeakers,
         equipment_needs: eventData.equipment,
         external_attendees: eventData.externalAttendees,
+        certificates_provided: eventData.certificatesProvided === 'yes',
+        attendance_marking: eventData.attendanceMarking === 'yes',
         budget: eventData.budget,
         registration_link: eventData.registrationLink,
         status: 'pending'
@@ -2156,6 +2344,8 @@
           waterBottles: parseInt(document.getElementById('waterBottles').textContent)
         },
         externalAttendees: document.querySelector('input[name="externalAttendees"]:checked').value,
+        certificatesProvided: document.querySelector('input[name="certificatesProvided"]:checked').value,
+        attendanceMarking: document.querySelector('input[name="attendanceMarking"]:checked').value,
         budget: document.getElementById('budget').value,
         registrationLink: document.getElementById('registrationLink').value,
         hostingClub: document.getElementById('hostingClub').value

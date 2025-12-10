@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit OD Form - BVDU OD Forms DMS</title>
+  <title>Submit OD Form - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -148,6 +148,17 @@
       flex-direction: column;
       align-items: center;
       width: 25%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .step:hover .step-circle {
+      transform: scale(1.15);
+      border-color: rgba(66, 133, 244, 0.6);
+    }
+
+    .step:hover .step-label {
+      color: rgba(66, 133, 244, 0.9);
     }
 
     .step-circle {
@@ -667,7 +678,7 @@
       <div class="flex items-center justify-between">
         <a href="../../index.html" class="navbar-brand flex items-center gap-3">
           <span class="text-3xl">🎓</span>
-          <span>BVDU OD Forms</span>
+          <span>BVDU CampusFlow</span>
         </a>
         <ul class="flex items-center gap-2">
           <li><a href="dashboard.html" class="nav-link flex items-center gap-2">
@@ -705,19 +716,19 @@
     <!-- Progress Indicator -->
     <div class="progress-container">
       <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-      <div class="step active" data-step="1">
+      <div class="step active" data-step="1" onclick="goToStep(1)" style="cursor: pointer;">
         <div class="step-circle">1</div>
         <div class="step-label">Personal Info</div>
       </div>
-      <div class="step" data-step="2">
+      <div class="step" data-step="2" onclick="goToStep(2)" style="cursor: pointer;">
         <div class="step-circle">2</div>
         <div class="step-label">Event Details</div>
       </div>
-      <div class="step" data-step="3">
+      <div class="step" data-step="3" onclick="goToStep(3)" style="cursor: pointer;">
         <div class="step-circle">3</div>
         <div class="step-label">Missed Lectures</div>
       </div>
-      <div class="step" data-step="4">
+      <div class="step" data-step="4" onclick="goToStep(4)" style="cursor: pointer;">
         <div class="step-circle">4</div>
         <div class="step-label">Review & Submit</div>
       </div>
@@ -1037,126 +1048,75 @@
     let uploadedFiles = [];
     let lectureCounter = 0;
 
-    // Mock user data for prototype
-    const mockUserData = {
-      id: 'demo-student-1',
-      full_name: 'Rahul Sharma',
-      roll_number: 'CS2021001',
-      course: 'B.Tech Computer Science',
-      semester: 'VI',
-      division: 'A',
-      contact_number: '+91 98765 43210',
-      email: 'rahul.sharma@bvdu.edu.in'
-    };
-
-    // Check Authentication (with mock fallback)
+    // Check Authentication
     async function checkAuth() {
       try {
-        // If Supabase is not initialized, use mock data
+        // Check sessionStorage first
+        const sessionUser = sessionStorage.getItem('currentUser');
+        if (sessionUser) {
+          const userData = JSON.parse(sessionUser);
+          if (userData && userData.role === 'student') {
+            currentUser = userData;
+            loadUserData(userData);
+            return userData;
+          }
+        }
+
         if (!supabaseClient) {
-          console.log('Using mock data for prototype (Supabase not configured)');
-          currentUser = mockUserData;
-          loadUserData(mockUserData);
-          return mockUserData;
+          window.location.href = '../../login.html?from=submit-form';
+          return null;
         }
 
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         
         if (!user || error) {
-          // Use mock data for prototype
-          console.log('Using mock data for prototype');
-          currentUser = mockUserData;
-          loadUserData(mockUserData);
-          return mockUserData;
+          window.location.href = '../../login.html?from=submit-form';
+          return null;
         }
         
         const { data: profile, error: profileError } = await supabaseClient
-          .from('profiles')
+          .from('users')
           .select('*')
           .eq('id', user.id)
           .single();
         
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          window.location.href = '../../login.html?from=submit-form';
+          return null;
+        }
         
         currentUser = profile;
+        sessionStorage.setItem('currentUser', JSON.stringify(profile));
         loadUserData(profile);
         return profile;
       } catch (error) {
         console.error('Auth error:', error);
-        // Fallback to mock data
-        currentUser = mockUserData;
-        loadUserData(mockUserData);
-        return mockUserData;
+        window.location.href = '../../login.html?from=submit-form';
+        return null;
       }
     }
 
-    // Load User Data into Form
+    // Load User Data into Form (Autofill personal information)
     function loadUserData(userData) {
-      document.getElementById('studentName').value = userData.full_name || '';
-      document.getElementById('rollNumber').value = userData.roll_number || '';
+      const fullName = userData.full_name || `${userData.first_name || ''} ${userData.middle_name || ''} ${userData.surname || ''}`.trim();
+      
+      document.getElementById('studentName').value = fullName;
+      document.getElementById('rollNumber').value = userData.roll_number || userData.prn || '';
       document.getElementById('course').value = userData.course || '';
-      document.getElementById('semester').value = userData.semester || '';
+      document.getElementById('semester').value = userData.year ? `Year ${userData.year}` : '';
       document.getElementById('division').value = userData.division || '';
-      document.getElementById('contactNumber').value = userData.contact_number || '';
+      document.getElementById('contactNumber').value = userData.phone || '';
+      
+      // Make personal fields readonly since they're autofilled
+      document.getElementById('studentName').setAttribute('readonly', true);
+      document.getElementById('rollNumber').setAttribute('readonly', true);
+      document.getElementById('course').setAttribute('readonly', true);
+      document.getElementById('semester').setAttribute('readonly', true);
+      document.getElementById('division').setAttribute('readonly', true);
     }
 
-    // Mock Events Data
-    const mockEvents = [
-      {
-        event_id: 'EVT-1710234567890',
-        event_name: 'Machine Learning Workshop',
-        event_type: 'Workshop',
-        event_category: 'Technical',
-        event_description: 'Comprehensive workshop on modern ML techniques and applications',
-        event_date: '2025-03-25',
-        start_time: '09:00',
-        end_time: '17:00',
-        venue: 'Computer Lab, Block A',
-        organizing_club: 'AI/ML Club',
-        event_leader_name: 'Dr. Rahul Sharma',
-        event_leader_id: 'leader-1',
-        is_national: true,
-        is_university: false,
-        certificate_provided: true,
-        od_eligible: true
-      },
-      {
-        event_id: 'EVT-1710134567891',
-        event_name: 'IEEE Technical Symposium',
-        event_type: 'Conference',
-        event_category: 'Academic',
-        event_description: 'Annual technical symposium featuring latest research and innovations',
-        event_date: '2025-03-28',
-        start_time: '10:00',
-        end_time: '18:00',
-        venue: 'Main Auditorium',
-        organizing_club: 'IEEE Student Branch',
-        event_leader_name: 'Prof. Priya Patel',
-        event_leader_id: 'leader-2',
-        is_national: true,
-        is_university: true,
-        certificate_provided: true,
-        od_eligible: true
-      },
-      {
-        event_id: 'EVT-1710034567892',
-        event_name: 'Cultural Fest - Verve 2025',
-        event_type: 'Cultural',
-        event_category: 'Extra-Curricular',
-        event_description: 'Annual cultural festival with music, dance, and drama competitions',
-        event_date: '2025-04-05',
-        start_time: '09:00',
-        end_time: '20:00',
-        venue: 'Open Ground',
-        organizing_club: 'Cultural Committee',
-        event_leader_name: 'Amit Kumar',
-        event_leader_id: 'leader-3',
-        is_national: false,
-        is_university: true,
-        certificate_provided: false,
-        od_eligible: true
-      }
-    ];
+    // Events loaded from database only
 
     // LocalStorage Helper Functions
     const STORAGE_KEY = 'bvdu_events';
@@ -1176,8 +1136,25 @@
     // Load Events into Dropdown
     async function loadEvents() {
       try {
-        // Load events from localStorage
-        const storedEvents = JSON.parse(localStorage.getItem('bvdu_events') || '[]');
+        if (!supabaseClient) {
+          console.error('Supabase not initialized');
+          return;
+        }
+
+        // Load approved events from Supabase
+        const { data: storedEvents, error } = await supabaseClient
+          .from('events')
+          .select('*')
+          .eq('od_eligible', true)
+          .eq('status', 'approved')
+          .order('event_date', { ascending: false });
+
+        if (error) {
+          console.error('Error loading events:', error);
+          const eventSelect = document.getElementById('eventSelect');
+          eventSelect.innerHTML = '<option value="">Error loading events</option>';
+          return;
+        }
         
         // Get current date and 3-day deadline logic
         const today = new Date();
@@ -1309,7 +1286,7 @@
 
     // Navigation Functions
     function nextStep() {
-      if (validateStep(currentStep)) {
+      if (validateStep(currentStep, false)) {
         if (currentStep < 4) {
           currentStep++;
           updateStepDisplay();
@@ -1330,6 +1307,11 @@
     function goToStep(step) {
       currentStep = step;
       updateStepDisplay();
+      
+      // Populate review when navigating to step 4
+      if (step === 4) {
+        populateReview();
+      }
     }
 
     function updateStepDisplay() {
@@ -1339,14 +1321,16 @@
       });
       document.querySelector(`[data-section="${currentStep}"]`).classList.add('active');
 
-      // Update progress steps
+      // Update progress steps based on validation
       document.querySelectorAll('.step').forEach(step => {
         const stepNum = parseInt(step.dataset.step);
         step.classList.remove('active', 'completed');
         
         if (stepNum === currentStep) {
           step.classList.add('active');
-        } else if (stepNum < currentStep) {
+          step.querySelector('.step-circle').textContent = stepNum;
+        } else if (validateStep(stepNum)) {
+          // Only mark as completed if all fields are valid
           step.classList.add('completed');
           step.querySelector('.step-circle').textContent = '✓';
         } else {
@@ -1354,62 +1338,75 @@
         }
       });
 
-      // Update progress bar
-      const progress = ((currentStep - 1) / 3) * 100;
+      // Calculate progress based on completed steps
+      let completedSteps = 0;
+      for (let i = 1; i <= 4; i++) {
+        if (validateStep(i)) completedSteps++;
+      }
+      const progress = (completedSteps / 4) * 100;
       document.getElementById('progressBar').style.width = `${progress}%`;
 
       // Scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Validation
-    function validateStep(step) {
+    // Validation (silent = true for step indicator, false for navigation)
+    function validateStep(step, silent = true) {
       switch(step) {
         case 1:
-          return true; // Personal info is read-only
+          return validatePersonalInfo(silent);
         case 2:
-          return validateEventDetails();
+          return validateEventDetails(silent);
         case 3:
-          return validateLectures();
+          return validateLectures(silent);
         case 4:
-          return validateReview();
+          return validateReview(silent);
         default:
           return false;
       }
     }
 
-    function validateEventDetails() {
-      let isValid = true;
+    function validatePersonalInfo(silent = true) {
+      // Personal info is autofilled and readonly, always valid
+      const studentName = document.getElementById('studentName').value;
+      const rollNumber = document.getElementById('rollNumber').value;
+      const course = document.getElementById('course').value;
+      const semester = document.getElementById('semester').value;
+      const division = document.getElementById('division').value;
       
-      // First check if event is selected
+      return !!(studentName && rollNumber && course && semester && division);
+    }
+
+    function validateEventDetails(silent = true) {
+      // Check if event is selected
       const eventSelect = document.getElementById('eventSelect');
       if (!eventSelect.value) {
-        eventSelect.classList.add('error');
-        const errorMsg = eventSelect.nextElementSibling;
-        if (errorMsg) errorMsg.classList.add('show');
-        alert('Please select an event from the dropdown');
+        if (!silent) {
+          eventSelect.classList.add('error');
+          alert('Please select an event from the dropdown');
+        }
         return false;
-      } else {
-        eventSelect.classList.remove('error');
-        const errorMsg = eventSelect.nextElementSibling;
-        if (errorMsg) errorMsg.classList.remove('show');
       }
 
       // Verify event details are populated
       const eventId = document.getElementById('eventId').value;
       if (!eventId) {
-        alert('Event details not loaded. Please select an event again.');
+        if (!silent) {
+          alert('Event details not loaded. Please select an event again.');
+        }
         return false;
       }
 
       return true;
     }
 
-    function validateLectures() {
+    function validateLectures(silent = true) {
       const lectureItems = document.querySelectorAll('.lecture-item');
       
       if (lectureItems.length === 0) {
-        alert('Please add at least one missed lecture');
+        if (!silent) {
+          alert('Please add at least one missed lecture');
+        }
         return false;
       }
 
@@ -1420,27 +1417,35 @@
         
         requiredFields.forEach(field => {
           const input = item.querySelector(`[data-field="${field}"]`);
-          if (!input.value.trim()) {
-            input.style.border = '1px solid #EA4335';
+          if (!input || !input.value.trim()) {
+            if (!silent) {
+              if (input) input.style.border = '1px solid #EA4335';
+            }
             isValid = false;
           } else {
-            input.style.border = '';
+            if (input) input.style.border = '';
           }
         });
       });
 
-      if (!isValid) {
+      if (!isValid && !silent) {
         alert('Please fill in all required fields in the lecture details');
+      }
+
+      return isValid;
+    }
+
+    function validateReview(silent = true) {
+      // Check if lectures exist and all previous steps are valid
+      if (!validateEventDetails(true) || !validateLectures(true)) {
         return false;
       }
 
-      return true;
-    }
-
-    function validateReview() {
       const confirmCheckbox = document.getElementById('confirmAccuracy');
-      if (!confirmCheckbox.checked) {
-        alert('Please confirm that all information is accurate');
+      if (!confirmCheckbox || !confirmCheckbox.checked) {
+        if (!silent) {
+          alert('Please confirm that all information is accurate');
+        }
         return false;
       }
       return true;
@@ -1501,12 +1506,23 @@
       `;
 
       document.getElementById('lecturesContainer').insertAdjacentHTML('beforeend', lectureHTML);
+      
+      // Add real-time validation to lecture inputs
+      const lectureItem = document.getElementById(lectureId);
+      const inputs = lectureItem.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => updateStepDisplay());
+        input.addEventListener('change', () => updateStepDisplay());
+      });
+      
       updateLectureSummary();
+      updateStepDisplay();
     }
 
     function removeLecture(lectureId) {
       document.getElementById(lectureId).remove();
       updateLectureSummary();
+      updateStepDisplay();
     }
 
     function updateLectureSummary() {
@@ -1623,9 +1639,12 @@
     // Review & Populate
     function populateReview() {
       // Personal Info
-      document.getElementById('reviewName').textContent = document.getElementById('studentName').value;
-      document.getElementById('reviewRoll').textContent = document.getElementById('rollNumber').value;
-      document.getElementById('reviewCourse').textContent = `${document.getElementById('course').value}, Sem ${document.getElementById('semester').value}`;
+      document.getElementById('reviewName').textContent = document.getElementById('studentName').value || '-';
+      document.getElementById('reviewRoll').textContent = document.getElementById('rollNumber').value || '-';
+      
+      const course = document.getElementById('course').value || '-';
+      const semester = document.getElementById('semester').value || '-';
+      document.getElementById('reviewCourse').textContent = course !== '-' && semester !== '-' ? `${course}, ${semester}` : '-';
 
       // Event Details
       document.getElementById('reviewEventName').textContent = document.getElementById('eventName').value;
@@ -1730,12 +1749,39 @@
       window.location.href = '../../login.html';
     });
 
+    // Real-time validation triggers
+    function setupRealTimeValidation() {
+      // Event selection change
+      const eventSelect = document.getElementById('eventSelect');
+      if (eventSelect) {
+        eventSelect.addEventListener('change', () => updateStepDisplay());
+      }
+
+      // Confirmation checkbox
+      const confirmCheckbox = document.getElementById('confirmAccuracy');
+      if (confirmCheckbox) {
+        confirmCheckbox.addEventListener('change', () => updateStepDisplay());
+      }
+
+      // Listen for lecture additions/removals
+      const observer = new MutationObserver(() => {
+        updateStepDisplay();
+      });
+
+      const lecturesContainer = document.getElementById('lecturesContainer');
+      if (lecturesContainer) {
+        observer.observe(lecturesContainer, { childList: true, subtree: true });
+      }
+    }
+
     // Initialize
     async function init() {
       await checkAuth();
       await loadEvents();
       // Add first lecture by default
       addLecture();
+      setupRealTimeValidation();
+      updateStepDisplay();
     }
 
     init();

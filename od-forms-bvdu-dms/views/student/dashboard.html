@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Dashboard - BVDU OD Forms DMS</title>
+  <title>Student Dashboard - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -489,6 +489,18 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Promotion Banner Animation */
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .stat-value {
@@ -522,7 +534,7 @@
       <div class="flex items-center justify-between">
         <a href="../../index.html" class="navbar-brand flex items-center gap-3">
           <span class="text-3xl">🎓</span>
-          <span>BVDU OD Forms</span>
+          <span>BVDU CampusFlow</span>
         </a>
         <ul class="flex items-center gap-2">
           <li><a href="dashboard.html" class="nav-link active flex items-center gap-2">
@@ -655,46 +667,81 @@
     // Check Authentication
     async function checkAuth() {
       try {
-        // If Supabase is not initialized, use mock data
-        if (!supabaseClient) {
-          console.log('Using mock mode - Supabase not configured');
-          return { id: 'demo', full_name: 'Demo User', email: 'demo@bvdu.edu.in' };
+        // First check sessionStorage for current user
+        const sessionUser = sessionStorage.getItem('currentUser');
+        if (sessionUser) {
+          try {
+            const userData = JSON.parse(sessionUser);
+            if (userData && userData.role === 'student') {
+              // Update UI with user info
+              if (document.getElementById('studentName')) {
+                document.getElementById('studentName').textContent = userData.full_name || userData.first_name || 'Student';
+              }
+              return userData;
+            }
+          } catch (e) {
+            console.error('Error parsing session user:', e);
+            sessionStorage.removeItem('currentUser');
+          }
         }
+
+        // If Supabase is not initialized, redirect to login
+        if (!supabaseClient) {
+          sessionStorage.removeItem('currentUser');
+          window.location.href = '../../login.html?from=dashboard';
+          return null;
+        }
+
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         
         if (!user || error) {
-          window.location.href = '../../login.html';
+          sessionStorage.removeItem('currentUser');
+          window.location.href = '../../login.html?from=dashboard';
           return null;
         }
         
+        // Get user profile from users table (not profiles)
         const { data: profile, error: profileError } = await supabaseClient
-          .from('profiles')
+          .from('users')
           .select('*')
           .eq('id', user.id)
           .single();
         
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Profile error:', profileError);
+          sessionStorage.removeItem('currentUser');
+          window.location.href = '../../login.html?from=dashboard';
+          return null;
+        }
         
         if (!profile.is_active) {
           await supabaseClient.auth.signOut();
+          sessionStorage.removeItem('currentUser');
           alert('Your account has been deactivated. Please contact administrator.');
-          window.location.href = '../../login.html';
+          window.location.href = '../../login.html?from=dashboard';
           return null;
         }
 
         if (profile.role !== 'student') {
+          sessionStorage.removeItem('currentUser');
           alert('Unauthorized access. This dashboard is for students only.');
-          window.location.href = '../../login.html';
+          window.location.href = '../../login.html?from=dashboard';
           return null;
         }
         
+        // Store in session
+        sessionStorage.setItem('currentUser', JSON.stringify(profile));
+        
         // Update UI with user info
-        document.getElementById('studentName').textContent = profile.full_name || profile.first_name || 'Student';
+        if (document.getElementById('studentName')) {
+          document.getElementById('studentName').textContent = profile.full_name || profile.first_name || 'Student';
+        }
         
         return profile;
       } catch (error) {
         console.error('Authentication error:', error);
-        window.location.href = '../../login.html';
+        sessionStorage.removeItem('currentUser');
+        window.location.href = '../../login.html?from=dashboard';
         return null;
       }
     }
@@ -869,10 +916,181 @@
       window.location.href = '../../login.html';
     });
 
+    // Auto-update student year on login
+    async function checkAndUpdateYear() {
+      if (!currentUser || currentUser.role !== 'student') return;
+      
+      if (!supabaseClient) {
+        // Mock mode - calculate year from PRN
+        const calculatedYear = calculateYearFromPRN(currentUser.prn, currentUser.course);
+        if (calculatedYear !== currentUser.year && calculatedYear !== 'Graduated') {
+          currentUser.year = calculatedYear;
+          sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+          showPromotionBanner(calculatedYear);
+          
+          // Update stats display
+          document.getElementById('studentYear').textContent = calculatedYear;
+        } else if (calculatedYear === 'Graduated') {
+          showGraduationMessage();
+        }
+        return;
+      }
+      
+      try {
+        // Update last_login (triggers auto-update via database trigger)
+        const { data, error } = await supabaseClient
+          .from('users')
+          .update({ last_login: new Date().toISOString() })
+          .eq('id', currentUser.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        
+        // Check if year was updated
+        if (data && data.year !== currentUser.year) {
+          const oldYear = currentUser.year;
+          currentUser.year = data.year;
+          sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+          
+          if (data.year !== 'Graduated') {
+            showPromotionBanner(data.year, oldYear);
+            document.getElementById('studentYear').textContent = data.year;
+          } else {
+            showGraduationMessage();
+          }
+        }
+        
+        // Check if graduated
+        if (data && !data.is_active) {
+          showGraduationMessage();
+        }
+      } catch (error) {
+        console.error('Error updating year:', error);
+      }
+    }
+
+    function calculateYearFromPRN(prn, course) {
+      if (!prn || prn.length < 2) return 'I';
+      
+      // Extract admission year from PRN (first 2 digits: 23 = 2023)
+      const yearPrefix = parseInt(prn.substring(0, 2));
+      const admissionYear = 2000 + yearPrefix;
+      
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // 1-12
+      
+      // Calculate years since admission
+      const yearsSinceAdmission = currentYear - admissionYear;
+      
+      // Determine current semester based on month
+      let currentSemester;
+      if (currentMonth >= 7) {
+        // Odd semester (July-Dec): 1st, 3rd, 5th
+        currentSemester = (yearsSinceAdmission * 2) + 1;
+      } else {
+        // Even semester (Jan-June): 2nd, 4th, 6th
+        currentSemester = yearsSinceAdmission * 2;
+      }
+      
+      // Determine year based on semester
+      if (currentSemester <= 2) return 'I';
+      if (currentSemester <= 4) return 'II';
+      if (currentSemester <= 6) return 'III';
+      
+      // Check graduation
+      if (course === 'MBA' && currentSemester > 4) return 'Graduated';
+      if (currentSemester > 6) return 'Graduated';
+      
+      return 'I';
+    }
+
+    function showPromotionBanner(newYear, oldYear = null) {
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, rgba(66, 133, 244, 0.95), rgba(52, 168, 83, 0.95));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        max-width: 400px;
+        animation: slideInRight 0.5s ease;
+      `;
+      
+      banner.innerHTML = `
+        <div style="display: flex; align-items: start; gap: 1rem;">
+          <span style="font-size: 2rem;">🎉</span>
+          <div style="flex: 1;">
+            <strong style="display: block; font-size: 1.1rem; margin-bottom: 0.5rem; color: white;">
+              Congratulations!
+            </strong>
+            <p style="color: rgba(255, 255, 255, 0.95); margin: 0; font-size: 0.95rem;">
+              ${oldYear ? `You've been promoted from Year ${oldYear} to Year ${newYear}!` : `You're now in Year ${newYear}!`}
+            </p>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  style="background: rgba(255, 255, 255, 0.2); border: none; border-radius: 0.5rem; 
+                         padding: 0.5rem; cursor: pointer; color: white; font-size: 1rem;">
+            ✕
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(banner);
+      
+      // Auto-remove after 10 seconds
+      setTimeout(() => banner.remove(), 10000);
+    }
+
+    function showGraduationMessage() {
+      const banner = document.createElement('div');
+      banner.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, rgba(66, 133, 244, 0.98), rgba(52, 168, 83, 0.98));
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 2rem;
+        padding: 3rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        max-width: 500px;
+        text-align: center;
+      `;
+      
+      banner.innerHTML = `
+        <div style="color: white;">
+          <span style="font-size: 4rem; display: block; margin-bottom: 1rem;">🎓</span>
+          <h2 style="font-size: 2rem; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">
+            Congratulations, Graduate!
+          </h2>
+          <p style="font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.95;">
+            You've successfully completed your course. Thank you for being part of BVDU CampusFlow!
+          </p>
+          <button onclick="window.location.href='../../login.html'" 
+                  style="background: white; color: #4285F4; border: none; border-radius: 0.875rem; 
+                         padding: 1rem 2rem; font-weight: 600; font-size: 1rem; cursor: pointer;">
+            Return to Login
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(banner);
+    }
+
     // Initialize Dashboard
     async function init() {
       currentUser = await checkAuth();
       if (currentUser) {
+        await checkAndUpdateYear();
         await Promise.all([
           loadDashboardStats(),
           loadRecentForms()

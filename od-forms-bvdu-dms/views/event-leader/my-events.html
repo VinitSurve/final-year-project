@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Events - BVDU Event Management</title>
+  <title>My Events - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -572,19 +572,28 @@
       });
     }
 
-    // View Event
-    function viewEvent(eventId) {
-      alert(`View event details: ${eventId}`);
+    // View Event - Navigate to event details page
+    window.viewEvent = function(eventId) {
+      // Store event ID for detail page
+      sessionStorage.setItem('viewEventId', eventId);
+      // Navigate to event detail page (create if doesn't exist)
+      window.location.href = `event-details.html?id=${eventId}`;
     }
 
-    // Edit Event
-    function editEvent(eventId) {
-      alert(`Edit event: ${eventId}`);
+    // Edit Event - Navigate to edit page with event data
+    window.editEvent = function(eventId) {
+      // Store event ID for editing
+      sessionStorage.setItem('editEventId', eventId);
+      // Navigate to create-event page in edit mode
+      window.location.href = `create-event.html?edit=${eventId}`;
     }
 
-    // View Participants
-    function viewParticipants(eventId) {
-      alert(`View participants for: ${eventId}`);
+    // View Participants - Navigate to participants management page
+    window.viewParticipants = function(eventId) {
+      // Store event ID for participants page
+      sessionStorage.setItem('participantsEventId', eventId);
+      // Navigate to participants page (create if doesn't exist)
+      window.location.href = `participants.html?event=${eventId}`;
     }
 
     // Logout

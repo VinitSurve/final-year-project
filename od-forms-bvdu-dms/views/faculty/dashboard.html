@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faculty Dashboard - BVDU Event Management</title>
+  <title>Faculty Dashboard - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -475,6 +475,9 @@
     <div class="nav-menu">
       <a href="dashboard.html" class="nav-link active">🎯 Events</a>
       <a href="od-forms.html" class="nav-link">📋 OD Forms</a>
+      <a href="clubs.html" class="nav-link">🎪 Clubs</a>
+      <a href="create-event-leader.html" class="nav-link">👥 Create Event Leader</a>
+      <a href="profile.html" class="nav-link">👤 Profile</a>
       <a href="../../index.html" class="nav-link" id="logoutBtn">🚪 Logout</a>
     </div>
   </nav>
@@ -552,18 +555,64 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/supabase-client.js"></script>
   <script>
     let allEvents = [];
     let currentTab = 'pending';
 
+    // Notification function
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? 'rgba(52, 168, 83, 0.95)' : 'rgba(234, 67, 53, 0.95)'};
+        color: white;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        z-index: 10000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      initializeMockData();
       loadEvents();
     });
 
-    // Initialize Mock Data
-    function initializeMockData() {
+    // Load Events
+    async function loadEvents() {
+      try {
+        // Load events from Supabase
+        const { data: events, error } = await supabaseClient
+          .from('events')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error loading events:', error);
+          showNotification('Failed to load events', 'error');
+          return;
+        }
+
+        allEvents = events || [];
+        updateStats();
+        renderEvents();
+      } catch (error) {
+        console.error('Error in loadEvents:', error);
+        showNotification('Failed to load events', 'error');
+      }
+    }
+
+    // Removed mock data function - using Supabase now
+    function initializeMockDataOLD() {
       // Always initialize with fresh mock data (remove this condition after testing)
       if (true) {
         const mockEvents = [
@@ -852,18 +901,6 @@
       }
     }
 
-    // Load Events
-    function loadEvents() {
-      // Get all events from localStorage
-      const events = JSON.parse(localStorage.getItem('bvdu_events')) || [];
-      
-      // Faculty sees ALL events for approval (no event leader approval needed)
-      allEvents = events;
-
-      updateStats();
-      renderEvents();
-    }
-
     // Update Stats
     function updateStats() {
       const pending = allEvents.filter(e => !e.faculty_status || e.faculty_status === 'pending').length;
@@ -981,9 +1018,12 @@
     }
 
     // Logout
-    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    document.getElementById('logoutBtn').addEventListener('click', async function(e) {
       e.preventDefault();
       if (confirm('Are you sure you want to logout?')) {
+        await supabaseClient.auth.signOut();
+        sessionStorage.clear();
+        localStorage.removeItem('currentUser');
         window.location.href = '../../login.html';
       }
     });

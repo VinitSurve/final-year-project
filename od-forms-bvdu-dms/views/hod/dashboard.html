@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOD Dashboard - BVDU Event Management</title>
+  <title>HOD Dashboard - BVDU CampusFlow</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -502,6 +502,7 @@
     </a>
     <div class="nav-menu">
       <a href="dashboard.html" class="nav-link active">📋 OD Forms</a>
+      <a href="create-faculty.html" class="nav-link">👥 Create Faculty</a>
       <a href="../../index.html" class="nav-link" id="logoutBtn">🚪 Logout</a>
     </div>
   </nav>
@@ -613,120 +614,72 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/supabase-client.js"></script>
   <script>
     let allForms = [];
     let currentTab = 'pending';
     let selectedFormId = null;
 
+    // Notification function
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? 'rgba(52, 168, 83, 0.95)' : 'rgba(234, 67, 53, 0.95)'};
+        color: white;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        z-index: 10000;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease-out;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      initializeMockData();
       loadForms();
     });
 
-    // Initialize Mock Data
-    function initializeMockData() {
-      const existingForms = JSON.parse(localStorage.getItem('bvdu_od_forms')) || [];
-      
-      // Check if there are any faculty-approved forms for HOD to review
-      const hodForms = existingForms.filter(f => f.status === 'faculty_approved' || f.status === 'hod_approved' || f.status === 'hod_rejected');
-      
-      // Only add mock data if no HOD-relevant forms exist
-      if (hodForms.length === 0) {
-        // Add some faculty-approved forms for HOD to review
-        const mockHODForms = [
-          {
-            id: 'OD-2025-009',
-            student_name: 'Priya Sharma',
-            student_id: 'BVD2022089',
-            event_name: 'National Science Congress 2025',
-            event_type: 'Conference',
-            event_date: '2025-11-20',
-            submission_date: '2025-11-13',
-            status: 'faculty_approved',
-            total_lectures: 5,
-            total_hours: 7.5,
-            event_leader_status: 'approved',
-            event_leader_remarks: 'Excellent opportunity for student to present research paper on AI applications. Conference is nationally recognized and will enhance academic profile.',
-            event_leader_date: '2025-11-13T14:30:00',
-            faculty_status: 'approved',
-            faculty_remarks: 'Student has maintained good attendance (85%) and this conference aligns perfectly with the curriculum. Research presentation will be valuable. Recommended for approval.',
-            faculty_date: '2025-11-14T09:15:00'
-          },
-          {
-            id: 'OD-2025-010',
-            student_name: 'Arjun Patel',
-            student_id: 'BVD2022134',
-            event_name: 'Tech Leaders Summit - Mumbai',
-            event_type: 'Conference',
-            event_date: '2025-11-22',
-            submission_date: '2025-11-13',
-            status: 'faculty_approved',
-            total_lectures: 3,
-            total_hours: 4.5,
-            event_leader_status: 'approved',
-            event_leader_remarks: 'Industry conference with top tech leaders. Student will gain networking opportunities and exposure to latest technology trends.',
-            event_leader_date: '2025-11-13T16:00:00',
-            faculty_status: 'approved',
-            faculty_remarks: 'Student is performing well academically. This conference features speakers from Google, Microsoft, and Amazon. Valuable learning experience.',
-            faculty_date: '2025-11-14T10:00:00'
-          },
-          {
-            id: 'OD-2025-011',
-            student_name: 'Sneha Desai',
-            student_id: 'BVD2022167',
-            event_name: 'International Hackathon - IIT Bombay',
-            event_type: 'Competition',
-            event_date: '2025-11-25',
-            submission_date: '2025-11-14',
-            status: 'faculty_approved',
-            total_lectures: 4,
-            total_hours: 6,
-            event_leader_status: 'approved',
-            event_leader_remarks: 'Prestigious hackathon at IIT Bombay. Student has strong coding skills and team is well-prepared. Great opportunity for inter-college competition.',
-            event_leader_date: '2025-11-14T11:20:00',
-            faculty_status: 'approved',
-            faculty_remarks: 'Student has 90% attendance and excellent academic record. IIT Bombay hackathon is highly competitive and will provide excellent exposure.',
-            faculty_date: '2025-11-14T13:45:00'
-          },
-          {
-            id: 'OD-2025-012',
-            student_name: 'Rohan Kumar',
-            student_id: 'BVD2022201',
-            event_name: 'Startup Pitch Competition - Pune',
-            event_type: 'Competition',
-            event_date: '2025-11-28',
-            submission_date: '2025-11-14',
-            status: 'faculty_approved',
-            total_lectures: 3,
-            total_hours: 4.5,
-            event_leader_status: 'approved',
-            event_leader_remarks: 'Student has developed an innovative EdTech startup idea. This competition offers mentorship from industry experts and potential funding.',
-            event_leader_date: '2025-11-14T12:00:00',
-            faculty_status: 'approved',
-            faculty_remarks: 'The startup idea is innovative and aligns with entrepreneurship curriculum. Student attendance is satisfactory. Recommend approval.',
-            faculty_date: '2025-11-14T14:30:00'
-          }
-        ];
-
-        // Merge with existing forms
-        const allForms = [...existingForms, ...mockHODForms];
-        localStorage.setItem('bvdu_od_forms', JSON.stringify(allForms));
-      }
-    }
-
     // Load Forms
-    function loadForms() {
-      const forms = JSON.parse(localStorage.getItem('bvdu_od_forms')) || [];
-      // HOD only sees forms that are approved by faculty (status: faculty_approved) or already processed by HOD
-      allForms = forms.filter(f => 
-        f.status === 'faculty_approved' || 
-        f.status === 'hod_approved' || 
-        f.status === 'hod_rejected'
-      );
-      
-      updateStats();
-      renderForms();
+    async function loadForms() {
+      try {
+        // Load forms from Supabase that need HOD approval
+        const { data: forms, error } = await supabaseClient
+          .from('od_forms')
+          .select(`
+            *,
+            student:users!od_forms_student_id_fkey(full_name, prn),
+            event:events!od_forms_event_id_fkey(event_name, event_type, start_date)
+          `)
+          .in('status', ['faculty_approved', 'hod_approved', 'hod_rejected'])
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error loading forms:', error);
+          showNotification('Failed to load forms', 'error');
+          return;
+        }
+
+        // HOD sees forms that are approved by faculty or already processed by HOD
+        allForms = forms || [];
+        
+        updateStats();
+        renderForms();
+      } catch (error) {
+        console.error('Error in loadForms:', error);
+        showNotification('Failed to load forms', 'error');
+      }
     }
 
     // Update Stats
@@ -954,9 +907,12 @@
     }
 
     // Logout
-    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    document.getElementById('logoutBtn').addEventListener('click', async function(e) {
       e.preventDefault();
       if (confirm('Are you sure you want to logout?')) {
+        await supabaseClient.auth.signOut();
+        sessionStorage.clear();
+        localStorage.removeItem('currentUser');
         window.location.href = '../../login.html';
       }
     });
