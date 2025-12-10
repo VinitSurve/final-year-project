@@ -6,6 +6,8 @@
 .env.production.local
 
 # Documentation (sensitive planning docs)
+docs/ *.md
+*.txt
 
 # Dependencies
 node_modules/

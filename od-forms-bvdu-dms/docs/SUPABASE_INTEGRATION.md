@@ -1005,7 +1005,7 @@ SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # Keep SECRET!
 
 # Gemini AI (for event detail generation)
-GEMINI_API_KEY=AIzaSyA7ocvshcJirFNWj2sar0okPDC0vCYR9JY
+GEMINI_API_KEY= your-gemini-api-key
 
 # Google Drive (for folder creation)
 GOOGLE_DRIVE_API_KEY=your-drive-api-key
